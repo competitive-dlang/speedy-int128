@@ -65,8 +65,8 @@ align(Cent_alignment) struct Cent
     }
 }
 
-pure
-Cent divmod(Cent c1, Cent c2, out Cent modulus)
+pragma(inline, true) pure
+Cent divmod()(Cent c1, Cent c2, out Cent modulus)
 {
     modulus = mod(c1, c2);
     return div(c1, c2);
@@ -76,23 +76,23 @@ Cent divmod(Cent c1, Cent c2, out Cent modulus)
 def generate_function(code)
   tbl = {
     ["__int128", "__int128", "unsigned int"] =>
-      ["pragma(inline, true) pure\nCent", "(Cent a, uint b)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
+      ["pragma(inline, true) pure\nCent", "()(Cent a, uint b)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
        "`, long[2])(a.lo, a.hi, b);\n}\n"],
 
     ["__int128", "__int128", "__int128"] =>
-      ["pragma(inline, true) pure\nCent", "(Cent a, Cent b)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
+      ["pragma(inline, true) pure\nCent", "()(Cent a, Cent b)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
        "`, long[2])(a.lo, a.hi, b.lo, b.hi);\n}\n"],
 
     ["__int128", "__int128"] =>
-      ["pragma(inline, true) pure\nCent", "(Cent a)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
+      ["pragma(inline, true) pure\nCent", "()(Cent a)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
        "`, long[2])(a.lo, a.hi);\n}\n"],
 
     ["int", "__int128", "__int128"] =>
-      ["pragma(inline, true) pure\nbool", "(Cent a, Cent b)\n{\n\treturn cast(bool)__ir_pure!(`\n\t\t",
+      ["pragma(inline, true) pure\nbool", "()(Cent a, Cent b)\n{\n\treturn cast(bool)__ir_pure!(`\n\t\t",
        "`, int)(a.lo, a.hi, b.lo, b.hi);\n}\n"],
 
     ["int", "__int128"] =>
-      ["pragma(inline, true) pure\nbool", "(Cent a)\n{\n\treturn cast(bool)__ir_pure!(`\n\t\t",
+      ["pragma(inline, true) pure\nbool", "()(Cent a)\n{\n\treturn cast(bool)__ir_pure!(`\n\t\t",
        "`, int)(a.lo, a.hi);\n}\n"],
   }
 
@@ -144,5 +144,8 @@ generate_function("__int128 neg(__int128 a)                  { return -a; }")
 generate_function("__int128 com(__int128 a)                  { return ~a; }")
 generate_function("int gt(__int128 a, __int128 b)            { return a > b; }")
 generate_function("int tst(__int128 a)                       { return a != 0; }")
+
+generate_function("int uge(__int128 a, __int128 b)           { return ((unsigned __int128)a) >= ((unsigned __int128)b); }")
+generate_function("__int128 shr1(__int128 c)                 { return ((unsigned __int128)c) >> 1; }")
 
 puts "\n} // version (LDC)"

@@ -1,6 +1,5 @@
 // This is a pretty much unmodified copy of std.int128 from Phobos with
-// just 'core.int128' replaced by 'speedy.int128_ldc' for LDC on X86_64
-// platform (but maybe it actually works on the other platforms too?).
+// just 'core.int128' replaced by 'speedy.int128_ldc'.
 
 // Written in the D programming language
 /**
@@ -14,10 +13,10 @@
 module speedy.int128;
 
 version (LDC) {
-    version (X86_64) {
-        private import speedy.int128_ldc;
-    } else {
-        private import core.int128;
+    private import speedy.int128_ldc;
+    static if (size_t.sizeof != 8) {
+        // Avoid "error: undefined reference to '__umodti3'" on 32-bit x86
+        private import speedy.int128_ldc_32bit_fallback : div, divmod;
     }
 } else {
     private import core.int128;
