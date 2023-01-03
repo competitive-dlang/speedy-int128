@@ -1,3 +1,7 @@
+// This is a pretty much unmodified copy of std.int128 from Phobos with
+// just 'core.int128' replaced by 'speedy.int128_ldc' for LDC on X86_64
+// platform (but maybe it actually works on the other platforms too?).
+
 // Written in the D programming language
 /**
  * Implements a signed 128 bit integer type.
@@ -7,10 +11,17 @@
     License:    $(HTTP boost.org/LICENSE_1_0.txt, Boost License 1.0)
     Source:     $(PHOBOSSRC std/int128.d)
  */
-module std.int128;
+module speedy.int128;
 
-private import core.int128;
-
+version (LDC) {
+    version (X86_64) {
+        private import speedy.int128_ldc;
+    } else {
+        private import core.int128;
+    }
+} else {
+    private import core.int128;
+}
 
 /***********************************
  * 128 bit signed integer type.

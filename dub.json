@@ -1,0 +1,9 @@
+{
+	"name": "speedy-int128",
+	"description": "An experiment to speed up the 128-bit integer type",
+	"authors": ["Siarhei Siamashka"],
+	"license": "BSL-1.0",
+	"sourceFiles": ["speedy/int128.d",
+			"speedy/int128_ldc.d"],
+	"importPaths": ["."]
+}
