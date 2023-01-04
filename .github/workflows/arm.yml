@@ -31,14 +31,15 @@ jobs:
           DFLAGS="-gcc=arm-linux-gnueabihf-gcc" ./dub build --single --build release --config=speedy --compiler=ldc2 --force benchmark.d
           time ./benchmark && time ./benchmark
 
-      - name: Uninstall 32-bit armhf LDC and get LDC, GDC 12 and DUB from the Ubuntu reposotory
-        run: sudo apt-get install ldc gdc-12 dub -y
+      - name: Uninstall 32-bit armhf LDC and get LDC, GDC 9/12 and DUB from the Ubuntu reposotory
+        run: sudo apt-get install ldc gdc-9 gdc-12 dub -y
 
       - name: Show versions
         run: |
           dub --version
           ldc2 --version
           ./ldc2-1.30.0 --version
+          gdc-9 --version
           gdc-12 --version
           gcc --version
           clang --version
@@ -60,9 +61,19 @@ jobs:
           clang -O3 -g benchmark.c
           time ./a.out && time ./a.out
 
+      - name: Run benchmark for GDC 9 (speedy.int128)
+        run: |
+          dub build --single --build release --config=speedy --compiler=gdc-9 --force benchmark.d
+          time ./benchmark && time ./benchmark
+
       - name: Run benchmark for GDC 12 (std.int128)
         run: |
-          dub build --single --build release --compiler=gdc-12 --force benchmark.d
+          dub build --single --build release --config=std --compiler=gdc-12 --force benchmark.d
+          time ./benchmark && time ./benchmark
+
+      - name: Run benchmark for GDC 12 (speedy.int128)
+        run: |
+          dub build --single --build release --config=speedy --compiler=gdc-12 --force benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for LDC 1.30.0 (std.int128)
