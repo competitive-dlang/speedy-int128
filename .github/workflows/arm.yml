@@ -8,27 +8,69 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install dependencies on Ubuntu
-        run: sudo apt-get update && sudo apt-get install libev-dev libevent-dev libsqlite3-dev gcc clang -y
+      - name: Install 32-bit armhf LDC from the Ubuntu repository
+        run: |
+          sudo dpkg --add-architecture armhf
+          sudo apt-get update && sudo apt-get install libev-dev libevent-dev libsqlite3-dev ldc:armhf gcc-arm-linux-gnueabihf -y
 
-      - name: Install LDC and DUB
+      - name: Download binary LDC 1.30.0 release for aarch64
+        run: |
+          wget https://github.com/ldc-developers/ldc/releases/download/v1.30.0/ldc2-1.30.0-linux-aarch64.tar.xz
+          tar -xJf ldc2-1.30.0-linux-aarch64.tar.xz
+          ln -s ./ldc2-1.30.0-linux-aarch64/bin/ldc2 ./ldc2-1.30.0
+          ln -s ./ldc2-1.30.0-linux-aarch64/bin/dub ./dub
+
+      - name: Run 32-bit tests
+        run: |
+          ldc2 --version
+          DFLAGS="-unittest -g -gcc=arm-linux-gnueabihf-gcc" ./dub test --compiler=ldc2
+          DFLAGS="-unittest -g -O -gcc=arm-linux-gnueabihf-gcc" ./dub test --compiler=ldc2
+
+      - name: Run benchmark for 32-bit LDC 1.28.0 (speedy.int128)
+        run: |
+          DFLAGS="-gcc=arm-linux-gnueabihf-gcc" ./dub build --single --build release --config=speedy --compiler=ldc2 --force benchmark.d
+          time ./benchmark && time ./benchmark
+
+      - name: Uninstall 32-bit armhf LDC and get LDC, GDC 12 and DUB from the Ubuntu reposotory
         run: sudo apt-get install ldc gdc-12 dub -y
 
       - name: Show versions
         run: |
           dub --version
           ldc2 --version
+          ./ldc2-1.30.0 --version
+          gdc-12 --version
+          gcc --version
+          clang --version
 
-      - name: Run tests
+      - name: Run 64-bit tests
         run: |
           dub test --compiler=ldc2
           DFLAGS="-unittest -O -g" dub test --compiler=ldc2
+          dub test --compiler=./ldc2-1.30.0
+          DFLAGS="-unittest -O -g" dub test --compiler=./ldc2-1.30.0
 
-      - name: Run benchmarks
+      - name: Run benchmark for GCC
         run: |
-          echo "== GCC ==" && gcc -O3 -g benchmark.c && time ./a.out
-          echo "== Clang ==" && clang -O3 -g benchmark.c && time ./a.out
-          echo "== GDC 12 (std.int128) ==" && gdc-12 -O3 -frelease -fno-weak-templates -g benchmark.d && time ./a.out
-          sed -i s/std.int128/speedy.int128/ benchmark.d
-          ldc2 -O -g -release benchmark.d speedy/int128.d speedy/int128_ldc.d speedy/int128_ldc_32bit_fallback.d
-          echo "== LDC (speedy.int128) ==" && time ./benchmark
+          gcc -O3 -g benchmark.c
+          time ./a.out && time ./a.out
+
+      - name: Run benchmark for Clang
+        run: |
+          clang -O3 -g benchmark.c
+          time ./a.out && time ./a.out
+
+      - name: Run benchmark for GDC 12 (std.int128)
+        run: |
+          dub build --single --build release --compiler=gdc-12 --force benchmark.d
+          time ./benchmark && time ./benchmark
+
+      - name: Run benchmark for LDC 1.30.0 (std.int128)
+        run: |
+          dub build --single --build release --config=std --compiler=./ldc2-1.30.0 --force benchmark.d
+          time ./benchmark && time ./benchmark
+
+      - name: Run benchmark for LDC 1.30.0 (speedy.int128)
+        run: |
+          dub build --single --build release --config=speedy --compiler=./ldc2-1.30.0 --force benchmark.d
+          time ./benchmark && time ./benchmark
