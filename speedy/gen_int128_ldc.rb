@@ -76,16 +76,16 @@ Cent divmod()(Cent c1, Cent c2, out Cent modulus)
 def generate_function(code)
   tbl = {
     ["__int128", "__int128", "unsigned int"] =>
-      ["pragma(inline, true) pure\nCent", "()(Cent a, uint b)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
-       "`, long[2])(a.lo, a.hi, b);\n}\n"],
+      ["pragma(inline, true) pure\nCent", "()(Cent a, uint b)\n{\n\tauto tmp = __ir_pure!(`\n\t\t",
+       "`, long[2])(a.lo, a.hi, b);\n\treturn Cent(tmp[0], tmp[1]);\n}\n"],
 
     ["__int128", "__int128", "__int128"] =>
-      ["pragma(inline, true) pure\nCent", "()(Cent a, Cent b)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
-       "`, long[2])(a.lo, a.hi, b.lo, b.hi);\n}\n"],
+      ["pragma(inline, true) pure\nCent", "()(Cent a, Cent b)\n{\n\tauto tmp = __ir_pure!(`\n\t\t",
+       "`, long[2])(a.lo, a.hi, b.lo, b.hi);\n\treturn Cent(tmp[0], tmp[1]);\n}\n"],
 
     ["__int128", "__int128"] =>
-      ["pragma(inline, true) pure\nCent", "()(Cent a)\n{\n\treturn cast(Cent)__ir_pure!(`\n\t\t",
-       "`, long[2])(a.lo, a.hi);\n}\n"],
+      ["pragma(inline, true) pure\nCent", "()(Cent a)\n{\n\tauto tmp = __ir_pure!(`\n\t\t",
+       "`, long[2])(a.lo, a.hi);\n\treturn Cent(tmp[0], tmp[1]);\n}\n"],
 
     ["int", "__int128", "__int128"] =>
       ["pragma(inline, true) pure\nbool", "()(Cent a, Cent b)\n{\n\treturn cast(bool)__ir_pure!(`\n\t\t",

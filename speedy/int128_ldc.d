@@ -42,7 +42,7 @@ Cent divmod()(Cent c1, Cent c2, out Cent modulus)
 pragma(inline, true) pure
 Cent shl()(Cent a, uint b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %4 = zext i64 %1 to i128
         %5 = shl nuw i128 %4, 64
         %6 = zext i64 %0 to i128
@@ -55,12 +55,13 @@ Cent shl()(Cent a, uint b)
         %13 = insertvalue [ 2 x i64 ] undef, i64 %10, 0
         %14 = insertvalue [ 2 x i64 ] %13, i64 %12, 1
         ret [ 2 x i64 ] %14`, long[2])(a.lo, a.hi, b);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent shr()(Cent a, uint b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %4 = zext i64 %1 to i128
         %5 = shl nuw i128 %4, 64
         %6 = zext i64 %0 to i128
@@ -73,12 +74,13 @@ Cent shr()(Cent a, uint b)
         %13 = insertvalue [ 2 x i64 ] undef, i64 %10, 0
         %14 = insertvalue [ 2 x i64 ] %13, i64 %12, 1
         ret [ 2 x i64 ] %14`, long[2])(a.lo, a.hi, b);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent sar()(Cent a, uint b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %4 = zext i64 %1 to i128
         %5 = shl nuw i128 %4, 64
         %6 = zext i64 %0 to i128
@@ -91,12 +93,13 @@ Cent sar()(Cent a, uint b)
         %13 = insertvalue [ 2 x i64 ] undef, i64 %10, 0
         %14 = insertvalue [ 2 x i64 ] %13, i64 %12, 1
         ret [ 2 x i64 ] %14`, long[2])(a.lo, a.hi, b);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent mul()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -112,12 +115,13 @@ Cent mul()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent div()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -133,12 +137,13 @@ Cent div()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent mod()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -154,12 +159,13 @@ Cent mod()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent xor()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -175,12 +181,13 @@ Cent xor()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent and()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -196,12 +203,13 @@ Cent and()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent or()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -217,12 +225,13 @@ Cent or()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent add()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -238,12 +247,13 @@ Cent add()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent sub()(Cent a, Cent b)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
         %6 = shl nuw i128 %5, 64
         %7 = zext i64 %0 to i128
@@ -259,12 +269,13 @@ Cent sub()(Cent a, Cent b)
         %17 = insertvalue [ 2 x i64 ] undef, i64 %14, 0
         %18 = insertvalue [ 2 x i64 ] %17, i64 %16, 1
         ret [ 2 x i64 ] %18`, long[2])(a.lo, a.hi, b.lo, b.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent inc()(Cent a)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
         %4 = shl nuw i128 %3, 64
         %5 = zext i64 %0 to i128
@@ -276,12 +287,13 @@ Cent inc()(Cent a)
         %11 = insertvalue [ 2 x i64 ] undef, i64 %8, 0
         %12 = insertvalue [ 2 x i64 ] %11, i64 %10, 1
         ret [ 2 x i64 ] %12`, long[2])(a.lo, a.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent dec()(Cent a)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
         %4 = shl nuw i128 %3, 64
         %5 = zext i64 %0 to i128
@@ -293,12 +305,13 @@ Cent dec()(Cent a)
         %11 = insertvalue [ 2 x i64 ] undef, i64 %8, 0
         %12 = insertvalue [ 2 x i64 ] %11, i64 %10, 1
         ret [ 2 x i64 ] %12`, long[2])(a.lo, a.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent neg()(Cent a)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
         %4 = mul i128 %3, -18446744073709551616
         %5 = zext i64 %0 to i128
@@ -309,12 +322,13 @@ Cent neg()(Cent a)
         %10 = insertvalue [ 2 x i64 ] undef, i64 %7, 0
         %11 = insertvalue [ 2 x i64 ] %10, i64 %9, 1
         ret [ 2 x i64 ] %11`, long[2])(a.lo, a.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
 Cent com()(Cent a)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
         %4 = shl nuw i128 %3, 64
         %5 = zext i64 %0 to i128
@@ -326,6 +340,7 @@ Cent com()(Cent a)
         %11 = insertvalue [ 2 x i64 ] undef, i64 %8, 0
         %12 = insertvalue [ 2 x i64 ] %11, i64 %10, 1
         ret [ 2 x i64 ] %12`, long[2])(a.lo, a.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 pragma(inline, true) pure
@@ -378,7 +393,7 @@ bool uge()(Cent a, Cent b)
 pragma(inline, true) pure
 Cent shr1()(Cent a)
 {
-    return cast(Cent)__ir_pure!(`
+    auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
         %4 = shl nuw i128 %3, 64
         %5 = zext i64 %0 to i128
@@ -389,6 +404,7 @@ Cent shr1()(Cent a)
         %10 = insertvalue [ 2 x i64 ] undef, i64 %8, 0
         %11 = insertvalue [ 2 x i64 ] %10, i64 %9, 1
         ret [ 2 x i64 ] %11`, long[2])(a.lo, a.hi);
+    return Cent(tmp[0], tmp[1]);
 }
 
 } // version (LDC)
