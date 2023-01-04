@@ -1,6 +1,20 @@
-/*
+/+dub.sdl:
+dependency "speedy-int128" path="."
+configuration "std" {
+  targetType "executable"
+}
+configuration "speedy" {
+  targetType "executable"
+  versions "speedy"
+}
++/
+
+/* 
  * A simple benchmark based on a fast 64-bit primes checker from
  * https://www.mersenneforum.org/showpost.php?p=259040&postcount=8
+ *
+ * How to compile:
+ *   dub build --single --build release --compiler=ldc2 --config=speedy benchmark.d
  */
 
 const REPEATS = 1000000;
@@ -27,7 +41,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import std.stdio, std.stdint;
-import std.int128;
+version (speedy) {
+  import speedy.int128;
+} else {
+  import std.int128;
+}
 
 const HASHSIZE   = 2048;
 const MASK       = (HASHSIZE-1);
