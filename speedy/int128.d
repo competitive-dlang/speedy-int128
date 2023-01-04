@@ -1,5 +1,5 @@
-// This is a pretty much unmodified copy of std.int128 from Phobos with
-// just 'core.int128' replaced by 'speedy.int128_ldc' when compiled by LDC.
+// This is a pretty much unmodified copy of std.int128 from Phobos with just
+// 'core.int128' replaced by 'speedy.int128_core_ldc' when compiled by LDC.
 // Also all methods are marked with pragma(inline, true) for more speed.
 
 // Written in the D programming language
@@ -14,17 +14,18 @@
 module speedy.int128;
 
 version (LDC) {
-    private import speedy.int128_ldc;
+    private import speedy.int128_core_fallback : Cent;
+    private import speedy.int128_core_ldc;
     static if (size_t.sizeof != 8) {
         // Avoid "error: undefined reference to '__umodti3'" on 32-bit x86
-        private import speedy.int128_ldc_32bit_fallback : div, divmod;
+        private import speedy.int128_core_fallback : div, divmod;
         version (ARM) {
             // Avoid "error: undefined reference to '__multi3'" on 32-bit ARM
-            private import speedy.int128_ldc_32bit_fallback : mul, sub, neg;
+            private import speedy.int128_core_fallback : mul, sub, neg;
         }
     }
 } else {
-    private import core.int128;
+    private import speedy.int128_core_fallback;
 }
 
 /***********************************

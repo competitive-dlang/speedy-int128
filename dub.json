@@ -4,7 +4,7 @@
 	"authors": ["Siarhei Siamashka"],
 	"license": "BSL-1.0",
 	"sourceFiles": ["speedy/int128.d",
-			"speedy/int128_ldc.d",
-			"speedy/int128_ldc_32bit_fallback.d"],
+			"speedy/int128_core_ldc.d",
+			"speedy/int128_core_fallback.d"],
 	"importPaths": ["."]
 }
