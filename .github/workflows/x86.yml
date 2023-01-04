@@ -1,0 +1,51 @@
+# DMD 2.091.0 is used by Codeforces (win32)
+# DMD 2.091.0 is used by AtCoder (linux64)
+# LDC 1.20.1 is used by AtCoder (linux64)
+
+name: main
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: dub
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-latest, macOS-latest]
+        dc: [dmd-latest, dmd-2.091.0, ldc-latest, ldc-1.13.0, ldc-1.17.0, ldc-1.20.1, ldc-1.30.0]
+        exclude:
+          - { os: macOS-latest, dc: ldc-1.13.0 }
+          - { os: windows-latest, dc: ldc-1.13.0 }
+          - { os: ubuntu-22.04, dc: dmd-2.091.0 }
+          - { os: macOS-latest, dc: dmd-2.091.0 }
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install D compiler
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ${{ matrix.dc }}
+
+      - name: Install 32-bit support on Ubuntu
+        if: matrix.os == 'ubuntu-22.04'
+        run: sudo apt-get update && sudo apt-get install gcc-multilib -y
+
+      - name: Run 64-bit tests
+        run: |
+          dub test -a x86_64
+
+      - name: Run 64-bit tests (optimized)
+        if: matrix.os != 'windows-latest'
+        run: |
+          DFLAGS="-unittest -g -O" dub test -a x86_64
+
+      - name: Run 32-bit tests
+        if: matrix.os != 'macOS-latest'
+        run: |
+          dub test -a x86
+
+      - name: Run 32-bit tests (optimized)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          DFLAGS="-unittest -g -O" dub test -a x86
