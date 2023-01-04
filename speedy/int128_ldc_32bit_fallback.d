@@ -238,4 +238,82 @@ Cent divmod(Cent c1, Cent c2, out Cent modulus)
         return udivmod(c1, c2, modulus);
 }
 
+/****************************
+ * Multiply c1 * c2.
+ * Params:
+ *      c1 = operand 1
+ *      c2 = operand 2
+ * Returns:
+ *      c1 * c2
+ */
+pure
+Cent mul(Cent c1, Cent c2)
+{
+    enum mulmask = (1UL << (Ubits / 2)) - 1;
+    enum mulshift = Ubits / 2;
+
+    // This algorithm splits the operands into 4 words, then computes and sums
+    // the partial products of each part.
+    const c2l0 = c2.lo & mulmask;
+    const c2l1 = c2.lo >> mulshift;
+    const c2h0 = c2.hi & mulmask;
+    const c2h1 = c2.hi >> mulshift;
+
+    const c1l0 = c1.lo & mulmask;
+    U r0 = c1l0 * c2l0;
+    U r1 = c1l0 * c2l1 + (r0 >> mulshift);
+    U r2 = c1l0 * c2h0 + (r1 >> mulshift);
+    U r3 = c1l0 * c2h1 + (r2 >> mulshift);
+
+    const c1l1 = c1.lo >> mulshift;
+    r1 = c1l1 * c2l0 + (r1 & mulmask);
+    r2 = c1l1 * c2l1 + (r2 & mulmask) + (r1 >> mulshift);
+    r3 = c1l1 * c2h0 + (r3 & mulmask) + (r2 >> mulshift);
+
+    const c1h0 = c1.hi & mulmask;
+    r2 = c1h0 * c2l0 + (r2 & mulmask);
+    r3 = c1h0 * c2l1 + (r3 & mulmask) + (r2 >> mulshift);
+
+    const c1h1 = c1.hi >> mulshift;
+    r3 = c1h1 * c2l0 + (r3 & mulmask);
+
+    const Cent ret = { lo:(r0 & mulmask) + (r1 & mulmask) * (mulmask + 1),
+                       hi:(r2 & mulmask) + (r3 & mulmask) * (mulmask + 1) };
+    return ret;
+}
+
+/****************************
+ * Subtract c2 from c1.
+ * Params:
+ *      c1 = operand 1
+ *      c2 = operand 2
+ * Returns:
+ *      c1 - c2
+ */
+pure
+Cent sub(Cent c1, Cent c2)
+{
+    return add(c1, neg(c2));
+}
+
+/*****************************
+ * Negate
+ * Params:
+ *      c = Cent to negate
+ * Returns:
+ *      negated value
+ */
+pure
+Cent neg(Cent c)
+{
+    if (c.lo == 0)
+        c.hi = -c.hi;
+    else
+    {
+        c.lo = -c.lo;
+        c.hi = ~c.hi;
+    }
+    return c;
+}
+
 } // version (LDC)

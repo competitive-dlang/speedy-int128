@@ -17,6 +17,10 @@ version (LDC) {
     static if (size_t.sizeof != 8) {
         // Avoid "error: undefined reference to '__umodti3'" on 32-bit x86
         private import speedy.int128_ldc_32bit_fallback : div, divmod;
+        version (ARM) {
+            // Avoid "error: undefined reference to '__multi3'" on 32-bit ARM
+            private import speedy.int128_ldc_32bit_fallback : mul, sub, neg;
+        }
     }
 } else {
     private import core.int128;
