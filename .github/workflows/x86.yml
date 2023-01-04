@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        dc: [dmd-latest, ldc-latest, ldc-1.13.0, ldc-1.17.0, ldc-1.20.1]
+        dc: [dmd-latest, ldc-latest, ldc-1.13.0, ldc-1.17.0, ldc-1.20.1, ldc-1.30.0]
         exclude:
           - { os: macOS-latest, dc: ldc-1.13.0 }
           - { os: windows-latest, dc: ldc-1.13.0 }
@@ -23,14 +23,17 @@ jobs:
         with:
           compiler: ${{ matrix.dc }}
 
-      - name: Show version
-        run: dub --version
+      - name: Install 32-bit support on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install gcc-multilib -y
 
       - name: Run 64-bit tests
         run: |
           dub test -a x86_64
+          DFLAGS="-unittest -g -O" dub test -a x86_64
 
       - name: Run 32-bit tests
-        if: matrix.os == 'windows-latest'
+        if: matrix.os != 'macOS-latest'
         run: |
           dub test -a x86
+          DFLAGS="-unittest -g -O" dub test -a x86
