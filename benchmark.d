@@ -40,7 +40,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-import std.stdio, std.stdint;
+import std.stdio, std.stdint, std.exception;
 version (speedy) {
   import speedy.int128;
 } else {
@@ -245,5 +245,6 @@ int main() {
       primes_cnt++;
   }
   printf("Found %d primes.\n", primes_cnt);
+  enforce(primes_cnt == 23535, "expected 23535, but got something else");
   return 0;
 }
