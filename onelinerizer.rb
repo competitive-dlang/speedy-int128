@@ -86,4 +86,26 @@ abort "test failed" unless preprocess_src("- -a") == "- -a"
 abort "test failed" unless preprocess_src("module x; import foobar;") == ";"
 abort "test failed" unless preprocess_src("module x; import std : writeln;") == "import std:writeln;"
 
-puts preprocess_src(File.read(ARGV[0]))
+sources = []
+
+$describe = false
+$strip_unittests = false
+
+require "json"
+ARGV.each do |arg|
+  if arg =~ /^\-\-(.*)/
+    case $1
+      when "describe" then $describe = true
+      when "strip-unittests" then $strip_unittests = true
+      else abort "unknown option --#{$1}\n"
+    end
+  elsif arg =~ /dub\.json$/
+    data = JSON.parse(File.read(arg))
+    abort "bad json" unless data.has_key?("sourceFiles")
+    data["sourceFiles"].each {|sourcefile| sources.push(File.join(File.dirname(arg), sourcefile)) }
+  else
+    sources.push(arg)
+  end
+end
+
+puts sources.map {|filename| preprocess_src(File.read(filename)) }.join("")
