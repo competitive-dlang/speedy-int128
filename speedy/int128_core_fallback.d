@@ -19,10 +19,7 @@ alias I = long;
 alias U = ulong;
 enum Ubits = uint(U.sizeof * 8);
 
-version (X86_64) private enum Cent_alignment = 16;
-else             private enum Cent_alignment = (size_t.sizeof * 2);
-
-align(Cent_alignment) struct Cent
+struct Cent
 {
     version (LittleEndian)
     {
