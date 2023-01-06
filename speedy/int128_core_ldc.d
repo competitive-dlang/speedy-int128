@@ -10,14 +10,14 @@ nothrow:
 @safe:
 @nogc:
 
-pragma(inline, true) pure
+pure
 Cent ldc_divmod()(Cent c1, Cent c2, out Cent modulus)
 {
     modulus = ldc_mod(c1, c2);
     return ldc_div(c1, c2);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_shl()(Cent a, uint b)
 {
     auto tmp = __ir_pure!(`
@@ -36,7 +36,7 @@ Cent ldc_shl()(Cent a, uint b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_shr()(Cent a, uint b)
 {
     auto tmp = __ir_pure!(`
@@ -55,7 +55,7 @@ Cent ldc_shr()(Cent a, uint b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_sar()(Cent a, uint b)
 {
     auto tmp = __ir_pure!(`
@@ -74,7 +74,7 @@ Cent ldc_sar()(Cent a, uint b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_mul()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -96,7 +96,7 @@ Cent ldc_mul()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_div()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -118,7 +118,7 @@ Cent ldc_div()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_mod()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -140,7 +140,7 @@ Cent ldc_mod()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_xor()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -162,7 +162,7 @@ Cent ldc_xor()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_and()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -184,7 +184,7 @@ Cent ldc_and()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_or()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -206,7 +206,7 @@ Cent ldc_or()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_add()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -228,7 +228,7 @@ Cent ldc_add()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_sub()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
@@ -250,7 +250,7 @@ Cent ldc_sub()(Cent a, Cent b)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_inc()(Cent a)
 {
     auto tmp = __ir_pure!(`
@@ -268,7 +268,7 @@ Cent ldc_inc()(Cent a)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_dec()(Cent a)
 {
     auto tmp = __ir_pure!(`
@@ -286,7 +286,7 @@ Cent ldc_dec()(Cent a)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_neg()(Cent a)
 {
     auto tmp = __ir_pure!(`
@@ -303,7 +303,7 @@ Cent ldc_neg()(Cent a)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 Cent ldc_com()(Cent a)
 {
     auto tmp = __ir_pure!(`
@@ -321,7 +321,7 @@ Cent ldc_com()(Cent a)
     return Cent(tmp[0], tmp[1]);
 }
 
-pragma(inline, true) pure
+pure
 bool ldc_gt()(Cent a, Cent b)
 {
     return cast(bool)__ir_pure!(`
@@ -338,7 +338,7 @@ bool ldc_gt()(Cent a, Cent b)
         ret i32 %14`, int)(a.lo, a.hi, b.lo, b.hi);
 }
 
-pragma(inline, true) pure
+pure
 bool ldc_tst()(Cent a)
 {
     return cast(bool)__ir_pure!(`
