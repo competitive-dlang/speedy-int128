@@ -28,22 +28,22 @@ jobs:
 
       - name: Run benchmark for 32-bit LDC 1.30.0 (speedy.int128)
         run: |
-          ./dub build --single --build release --config=speedy --force -a x86 benchmark.d
+          dub build --single --build release --config=speedy --force -a x86 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for 32-bit LDC 1.30.0 (std.int128)
         run: |
-          ./dub build --single --build release --config=std --force -a x86 benchmark.d
+          dub build --single --build release --config=std --force -a x86 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for 64-bit LDC 1.30.0 (speedy.int128)
         run: |
-          ./dub build --single --build release --config=speedy --force -a x86_64 benchmark.d
+          dub build --single --build release --config=speedy --force -a x86_64 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for 64-bit LDC 1.30.0 (std.int128)
         run: |
-          ./dub build --single --build release --config=std --force -a x86_64 benchmark.d
+          dub build --single --build release --config=std --force -a x86_64 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Install DMD 2.100.2
@@ -53,22 +53,22 @@ jobs:
 
       - name: Run benchmark for 32-bit DMD 2.100.2 (speedy.int128)
         run: |
-          ./dub build --single --build release --config=speedy --force -a x86 benchmark.d
+          dub build --single --build release --config=speedy --force -a x86 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for 32-bit DMD 2.100.2 (std.int128)
         run: |
-          ./dub build --single --build release --config=std --force -a x86 benchmark.d
+          dub build --single --build release --config=std --force -a x86 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for 64-bit DMD 2.100.2 (speedy.int128)
         run: |
-          ./dub build --single --build release --config=speedy --force -a x86_64 benchmark.d
+          dub build --single --build release --config=speedy --force -a x86_64 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for 64-bit DMD 2.100.2 (std.int128)
         run: |
-          ./dub build --single --build release --config=std --force -a x86_64 benchmark.d
+          dub build --single --build release --config=std --force -a x86_64 benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Install GDC 9/12 and DUB from the Ubuntu reposotory
