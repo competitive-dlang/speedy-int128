@@ -11,14 +11,14 @@ nothrow:
 @nogc:
 
 pragma(inline, true) pure
-Cent divmod()(Cent c1, Cent c2, out Cent modulus)
+Cent ldc_divmod()(Cent c1, Cent c2, out Cent modulus)
 {
-    modulus = mod(c1, c2);
-    return div(c1, c2);
+    modulus = ldc_mod(c1, c2);
+    return ldc_div(c1, c2);
 }
 
 pragma(inline, true) pure
-Cent shl()(Cent a, uint b)
+Cent ldc_shl()(Cent a, uint b)
 {
     auto tmp = __ir_pure!(`
         %4 = zext i64 %1 to i128
@@ -37,7 +37,7 @@ Cent shl()(Cent a, uint b)
 }
 
 pragma(inline, true) pure
-Cent shr()(Cent a, uint b)
+Cent ldc_shr()(Cent a, uint b)
 {
     auto tmp = __ir_pure!(`
         %4 = zext i64 %1 to i128
@@ -56,7 +56,7 @@ Cent shr()(Cent a, uint b)
 }
 
 pragma(inline, true) pure
-Cent sar()(Cent a, uint b)
+Cent ldc_sar()(Cent a, uint b)
 {
     auto tmp = __ir_pure!(`
         %4 = zext i64 %1 to i128
@@ -75,7 +75,7 @@ Cent sar()(Cent a, uint b)
 }
 
 pragma(inline, true) pure
-Cent mul()(Cent a, Cent b)
+Cent ldc_mul()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -97,7 +97,7 @@ Cent mul()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent div()(Cent a, Cent b)
+Cent ldc_div()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -119,7 +119,7 @@ Cent div()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent mod()(Cent a, Cent b)
+Cent ldc_mod()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -141,7 +141,7 @@ Cent mod()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent xor()(Cent a, Cent b)
+Cent ldc_xor()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -163,7 +163,7 @@ Cent xor()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent and()(Cent a, Cent b)
+Cent ldc_and()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -185,7 +185,7 @@ Cent and()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent or()(Cent a, Cent b)
+Cent ldc_or()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -207,7 +207,7 @@ Cent or()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent add()(Cent a, Cent b)
+Cent ldc_add()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -229,7 +229,7 @@ Cent add()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent sub()(Cent a, Cent b)
+Cent ldc_sub()(Cent a, Cent b)
 {
     auto tmp = __ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -251,7 +251,7 @@ Cent sub()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-Cent inc()(Cent a)
+Cent ldc_inc()(Cent a)
 {
     auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
@@ -269,7 +269,7 @@ Cent inc()(Cent a)
 }
 
 pragma(inline, true) pure
-Cent dec()(Cent a)
+Cent ldc_dec()(Cent a)
 {
     auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
@@ -287,7 +287,7 @@ Cent dec()(Cent a)
 }
 
 pragma(inline, true) pure
-Cent neg()(Cent a)
+Cent ldc_neg()(Cent a)
 {
     auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
@@ -304,7 +304,7 @@ Cent neg()(Cent a)
 }
 
 pragma(inline, true) pure
-Cent com()(Cent a)
+Cent ldc_com()(Cent a)
 {
     auto tmp = __ir_pure!(`
         %3 = zext i64 %1 to i128
@@ -322,7 +322,7 @@ Cent com()(Cent a)
 }
 
 pragma(inline, true) pure
-bool gt()(Cent a, Cent b)
+bool ldc_gt()(Cent a, Cent b)
 {
     return cast(bool)__ir_pure!(`
         %5 = zext i64 %1 to i128
@@ -339,7 +339,7 @@ bool gt()(Cent a, Cent b)
 }
 
 pragma(inline, true) pure
-bool tst()(Cent a)
+bool ldc_tst()(Cent a)
 {
     return cast(bool)__ir_pure!(`
         %3 = zext i64 %1 to i128
@@ -349,40 +349,6 @@ bool tst()(Cent a)
         %7 = icmp ne i128 %6, 0
         %8 = zext i1 %7 to i32
         ret i32 %8`, int)(a.lo, a.hi);
-}
-
-pragma(inline, true) pure
-bool uge()(Cent a, Cent b)
-{
-    return cast(bool)__ir_pure!(`
-        %5 = zext i64 %1 to i128
-        %6 = shl nuw i128 %5, 64
-        %7 = zext i64 %0 to i128
-        %8 = or i128 %6, %7
-        %9 = zext i64 %3 to i128
-        %10 = shl nuw i128 %9, 64
-        %11 = zext i64 %2 to i128
-        %12 = or i128 %10, %11
-        %13 = icmp uge i128 %8, %12
-        %14 = zext i1 %13 to i32
-        ret i32 %14`, int)(a.lo, a.hi, b.lo, b.hi);
-}
-
-pragma(inline, true) pure
-Cent shr1()(Cent a)
-{
-    auto tmp = __ir_pure!(`
-        %3 = zext i64 %1 to i128
-        %4 = shl nuw i128 %3, 64
-        %5 = zext i64 %0 to i128
-        %6 = or i128 %4, %5
-        %7 = lshr i128 %6, 1
-        %8 = trunc i128 %7 to i64
-        %9 = lshr i64 %1, 1
-        %10 = insertvalue [ 2 x i64 ] undef, i64 %8, 0
-        %11 = insertvalue [ 2 x i64 ] %10, i64 %9, 1
-        ret [ 2 x i64 ] %11`, long[2])(a.lo, a.hi);
-    return Cent(tmp[0], tmp[1]);
 }
 
 } // version (LDC)

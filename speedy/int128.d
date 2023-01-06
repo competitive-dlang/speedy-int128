@@ -13,20 +13,8 @@
  */
 module speedy.int128;
 
-version (LDC) {
-    private import speedy.int128_core_fallback : Cent;
-    private import speedy.int128_core_ldc;
-    static if (size_t.sizeof != 8) {
-        // Avoid "error: undefined reference to '__umodti3'" on 32-bit x86
-        private import speedy.int128_core_fallback : div, divmod;
-        version (ARM) {
-            // Avoid "error: undefined reference to '__multi3'" on 32-bit ARM
-            private import speedy.int128_core_fallback : mul, sub, neg;
-        }
-    }
-} else {
-    private import speedy.int128_core_fallback;
-}
+private import speedy.int128_core_fallback;
+private import speedy.int128_core_ldc;
 
 /***********************************
  * 128 bit signed integer type.
@@ -35,6 +23,71 @@ version (LDC) {
 public struct Int128
 {
   @safe pure nothrow @nogc:
+
+    // Pick suitable implementations depending on the compiler and the platform
+    version (LDC)
+    {
+        alias shl = ldc_shl;
+        alias shr = ldc_shr;
+        alias sar = ldc_sar;
+        alias xor = ldc_xor;
+        alias and = ldc_and;
+        alias or  = ldc_or;
+        alias add = ldc_add;
+        alias inc = ldc_inc;
+        alias dec = ldc_dec;
+        alias com = ldc_com;
+        alias gt  = ldc_gt;
+        alias tst = ldc_tst;
+        static if (size_t.sizeof == 8)
+        {
+            // 64-bit platforms
+            alias div = ldc_div;
+            alias divmod = ldc_divmod;
+            alias mul = ldc_mul;
+            alias sub = ldc_sub;
+            alias neg = ldc_neg;
+        }
+        else
+        {
+            // Avoid "error: undefined reference to '__umodti3'" on 32-bit x86
+            alias div = core_div;
+            alias divmod = core_divmod;
+            version (ARM)
+            {
+                // Avoid "error: undefined reference to '__multi3'" on 32-bit ARM
+                alias mul = core_mul;
+                alias sub = core_sub;
+                alias neg = core_neg;
+            }
+            else
+            {
+                alias mul = ldc_mul;
+                alias sub = ldc_sub;
+                alias neg = ldc_neg;
+            }
+        }
+    }
+    else
+    {
+        alias shl = core_shl;
+        alias shr = core_shr;
+        alias sar = core_sar;
+        alias xor = core_xor;
+        alias and = core_and;
+        alias or  = core_or;
+        alias add = core_add;
+        alias inc = core_inc;
+        alias dec = core_dec;
+        alias com = core_com;
+        alias gt  = core_gt;
+        alias tst = core_tst;
+        alias div = core_div;
+        alias divmod = core_divmod;
+        alias mul = core_mul;
+        alias sub = core_sub;
+        alias neg = core_neg;
+    }
 
     Cent data;          /// core.int128.Cent
 

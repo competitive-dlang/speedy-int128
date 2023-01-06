@@ -44,10 +44,10 @@ nothrow:
 @nogc:
 
 pragma(inline, true) pure
-Cent divmod()(Cent c1, Cent c2, out Cent modulus)
+Cent ldc_divmod()(Cent c1, Cent c2, out Cent modulus)
 {
-    modulus = mod(c1, c2);
-    return div(c1, c2);
+    modulus = ldc_mod(c1, c2);
+    return ldc_div(c1, c2);
 }
 "
 
@@ -105,25 +105,22 @@ def generate_function(code)
   return o
 end
 
-generate_function("__int128 shl(__int128 c, unsigned int n)  { return c << n; }")
-generate_function("__int128 shr(__int128 c, unsigned int n)  { return ((unsigned __int128)c) >> n; }")
-generate_function("__int128 sar(__int128 c, unsigned int n)  { return c >> n; }")
-generate_function("__int128 mul(__int128 a, __int128 b)      { return a * b; }")
-generate_function("__int128 div(__int128 a, __int128 b)      { return a / b; }")
-generate_function("__int128 mod(__int128 a, __int128 b)      { return a % b; }")
-generate_function("__int128 xor(__int128 a, __int128 b)      { return a ^ b; }")
-generate_function("__int128 and(__int128 a, __int128 b)      { return a & b; }")
-generate_function("__int128 or(__int128 a, __int128 b)       { return a | b; }")
-generate_function("__int128 add(__int128 a, __int128 b)      { return a + b; }")
-generate_function("__int128 sub(__int128 a, __int128 b)      { return a - b; }")
-generate_function("__int128 inc(__int128 a)                  { return ++a; }")
-generate_function("__int128 dec(__int128 a)                  { return --a; }")
-generate_function("__int128 neg(__int128 a)                  { return -a; }")
-generate_function("__int128 com(__int128 a)                  { return ~a; }")
-generate_function("int gt(__int128 a, __int128 b)            { return a > b; }")
-generate_function("int tst(__int128 a)                       { return a != 0; }")
-
-generate_function("int uge(__int128 a, __int128 b)           { return ((unsigned __int128)a) >= ((unsigned __int128)b); }")
-generate_function("__int128 shr1(__int128 c)                 { return ((unsigned __int128)c) >> 1; }")
+generate_function("__int128 ldc_shl(__int128 c, unsigned int n) { return c << n; }")
+generate_function("__int128 ldc_shr(__int128 c, unsigned int n) { return ((unsigned __int128)c) >> n; }")
+generate_function("__int128 ldc_sar(__int128 c, unsigned int n) { return c >> n; }")
+generate_function("__int128 ldc_mul(__int128 a, __int128 b)     { return a * b; }")
+generate_function("__int128 ldc_div(__int128 a, __int128 b)     { return a / b; }")
+generate_function("__int128 ldc_mod(__int128 a, __int128 b)     { return a % b; }")
+generate_function("__int128 ldc_xor(__int128 a, __int128 b)     { return a ^ b; }")
+generate_function("__int128 ldc_and(__int128 a, __int128 b)     { return a & b; }")
+generate_function("__int128 ldc_or(__int128 a, __int128 b)      { return a | b; }")
+generate_function("__int128 ldc_add(__int128 a, __int128 b)     { return a + b; }")
+generate_function("__int128 ldc_sub(__int128 a, __int128 b)     { return a - b; }")
+generate_function("__int128 ldc_inc(__int128 a)                 { return ++a; }")
+generate_function("__int128 ldc_dec(__int128 a)                 { return --a; }")
+generate_function("__int128 ldc_neg(__int128 a)                 { return -a; }")
+generate_function("__int128 ldc_com(__int128 a)                 { return ~a; }")
+generate_function("int ldc_gt(__int128 a, __int128 b)           { return a > b; }")
+generate_function("int ldc_tst(__int128 a)                      { return a != 0; }")
 
 puts "\n} // version (LDC)"

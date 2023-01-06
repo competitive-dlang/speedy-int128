@@ -35,7 +35,7 @@ struct Cent
 
 enum Cent One = { lo:1 };
 enum Cent Zero = { lo:0 };
-enum Cent MinusOne = neg(One);
+enum Cent MinusOne = core_neg(One);
 
 /*****************************
  * Test against 0
@@ -45,7 +45,7 @@ enum Cent MinusOne = neg(One);
  *      true if != 0
  */
 pure
-bool tst(Cent c)
+bool core_tst(Cent c)
 {
     return c.hi || c.lo;
 }
@@ -59,7 +59,7 @@ bool tst(Cent c)
  *      complemented value
  */
 pure
-Cent com(Cent c)
+Cent core_com(Cent c)
 {
     c.lo = ~c.lo;
     c.hi = ~c.hi;
@@ -74,7 +74,7 @@ Cent com(Cent c)
  *      negated value
  */
 pure
-Cent neg(Cent c)
+Cent core_neg(Cent c)
 {
     if (c.lo == 0)
         c.hi = -c.hi;
@@ -94,9 +94,9 @@ Cent neg(Cent c)
  *      incremented value
  */
 pure
-Cent inc(Cent c)
+Cent core_inc(Cent c)
 {
-    return add(c, One);
+    return core_add(c, One);
 }
 
 /*****************************
@@ -107,9 +107,9 @@ Cent inc(Cent c)
  *      incremented value
  */
 pure
-Cent dec(Cent c)
+Cent core_dec(Cent c)
 {
-    return sub(c, One);
+    return core_sub(c, One);
 }
 
 /*****************************
@@ -167,7 +167,7 @@ Cent sar1(Cent c)
  *      shifted value
  */
 pure
-Cent shl(Cent c, uint n)
+Cent core_shl(Cent c, uint n)
 {
     if (n >= Ubits * 2)
         return Zero;
@@ -194,7 +194,7 @@ Cent shl(Cent c, uint n)
  *      shifted value
  */
 pure
-Cent shr(Cent c, uint n)
+Cent core_shr(Cent c, uint n)
 {
     if (n >= Ubits * 2)
         return Zero;
@@ -221,11 +221,11 @@ Cent shr(Cent c, uint n)
  *      shifted value
  */
 pure
-Cent sar(Cent c, uint n)
+Cent core_sar(Cent c, uint n)
 {
     const signmask = -(c.hi >> (Ubits - 1));
     const signshift = (Ubits * 2) - n;
-    c = shr(c, n);
+    c = core_shr(c, n);
 
     // Sign extend all bits beyond the precision of Cent.
     if (n >= Ubits * 2)
@@ -296,9 +296,9 @@ pure
 Cent rol(Cent c, uint n)
 {
     n &= Ubits * 2 - 1;
-    Cent l = shl(c, n);
-    Cent r = shr(c, Ubits * 2 - n);
-    return or(l, r);
+    Cent l = core_shl(c, n);
+    Cent r = core_shr(c, Ubits * 2 - n);
+    return core_or(l, r);
 }
 
 /*****************************
@@ -313,9 +313,9 @@ pure
 Cent ror(Cent c, uint n)
 {
     n &= Ubits * 2 - 1;
-    Cent r = shr(c, n);
-    Cent l = shl(c, Ubits * 2 - n);
-    return or(r, l);
+    Cent r = core_shr(c, n);
+    Cent l = core_shl(c, Ubits * 2 - n);
+    return core_or(r, l);
 }
 
 /****************************
@@ -327,7 +327,7 @@ Cent ror(Cent c, uint n)
  *      c1 & c2
  */
 pure
-Cent and(Cent c1, Cent c2)
+Cent core_and(Cent c1, Cent c2)
 {
     const Cent ret = { lo:c1.lo & c2.lo, hi:c1.hi & c2.hi };
     return ret;
@@ -342,7 +342,7 @@ Cent and(Cent c1, Cent c2)
  *      c1 | c2
  */
 pure
-Cent or(Cent c1, Cent c2)
+Cent core_or(Cent c1, Cent c2)
 {
     const Cent ret = { lo:c1.lo | c2.lo, hi:c1.hi | c2.hi };
     return ret;
@@ -357,7 +357,7 @@ Cent or(Cent c1, Cent c2)
  *      c1 ^ c2
  */
 pure
-Cent xor(Cent c1, Cent c2)
+Cent core_xor(Cent c1, Cent c2)
 {
     const Cent ret = { lo:c1.lo ^ c2.lo, hi:c1.hi ^ c2.hi };
     return ret;
@@ -372,7 +372,7 @@ Cent xor(Cent c1, Cent c2)
  *      c1 + c2
  */
 pure
-Cent add(Cent c1, Cent c2)
+Cent core_add(Cent c1, Cent c2)
 {
     U r = cast(U)(c1.lo + c2.lo);
     const Cent ret = { lo:r, hi:cast(U)(c1.hi + c2.hi + (r < c1.lo)) };
@@ -388,9 +388,9 @@ Cent add(Cent c1, Cent c2)
  *      c1 - c2
  */
 pure
-Cent sub(Cent c1, Cent c2)
+Cent core_sub(Cent c1, Cent c2)
 {
-    return add(c1, neg(c2));
+    return core_add(c1, core_neg(c2));
 }
 
 /****************************
@@ -402,7 +402,7 @@ Cent sub(Cent c1, Cent c2)
  *      c1 * c2
  */
 pure
-Cent mul(Cent c1, Cent c2)
+Cent core_mul(Cent c1, Cent c2)
 {
     enum mulmask = (1UL << (Ubits / 2)) - 1;
     enum mulshift = Ubits / 2;
@@ -527,11 +527,11 @@ Cent udivmod(Cent c1, Cent c2, out Cent modulus)
     }
 
     // Special cases
-    if (!tst(c2))
+    if (!core_tst(c2))
     {
         // Divide by zero
         modulus = Zero;
-        return com(modulus);
+        return core_com(modulus);
     }
     if (c1.hi == 0 && c2.hi == 0)
     {
@@ -569,7 +569,7 @@ Cent udivmod(Cent c1, Cent c2, out Cent modulus)
 
     // Normalize the divisor so its MSB is 1
     // v1 = (c2 << shift) >> 64
-    U v1 = shl(c2, shift).hi;
+    U v1 = core_shl(c2, shift).hi;
 
     // To ensure no overflow.
     Cent u1 = shr1(c1);
@@ -579,23 +579,23 @@ Cent udivmod(Cent c1, Cent c2, out Cent modulus)
     const Cent q1 = { lo:udivmod128_64(u1, v1, rem_ignored) };
 
     // Undo normalization and division of c1 by 2.
-    Cent quotient = shr(shl(q1, shift), 63);
+    Cent quotient = core_shr(core_shl(q1, shift), 63);
 
     // Make quotient correct or too small by 1
-    if (tst(quotient))
-        quotient = dec(quotient);
+    if (core_tst(quotient))
+        quotient = core_dec(quotient);
 
     // Now quotient is correct.
     // Compute rem = c1 - (quotient * c2);
-    Cent rem = sub(c1, mul(quotient, c2));
+    Cent rem = core_sub(c1, core_mul(quotient, c2));
 
     // Check if remainder is larger than the divisor
     if (uge(rem, c2))
     {
         // Increment quotient
-        quotient = inc(quotient);
+        quotient = core_inc(quotient);
         // Subtract c2 from remainder
-        rem = sub(rem, c2);
+        rem = core_sub(rem, c2);
     }
     modulus = rem;
     //printf("quotient "); print(quotient);
@@ -613,10 +613,10 @@ Cent udivmod(Cent c1, Cent c2, out Cent modulus)
  *      quotient c1 / c2
  */
 pure
-Cent div(Cent c1, Cent c2)
+Cent core_div(Cent c1, Cent c2)
 {
     Cent modulus;
-    return divmod(c1, c2, modulus);
+    return core_divmod(c1, c2, modulus);
 }
 
 /****************************
@@ -629,7 +629,7 @@ Cent div(Cent c1, Cent c2)
  *      quotient c1 / c2
  */
 pure
-Cent divmod(Cent c1, Cent c2, out Cent modulus)
+Cent core_divmod(Cent c1, Cent c2, out Cent modulus)
 {
     /* Muck about with the signs so we can use the unsigned divide
      */
@@ -637,17 +637,17 @@ Cent divmod(Cent c1, Cent c2, out Cent modulus)
     {
         if (cast(I)c2.hi < 0)
         {
-            Cent r = udivmod(neg(c1), neg(c2), modulus);
-            modulus = neg(modulus);
+            Cent r = udivmod(core_neg(c1), core_neg(c2), modulus);
+            modulus = core_neg(modulus);
             return r;
         }
-        Cent r = neg(udivmod(neg(c1), c2, modulus));
-        modulus = neg(modulus);
+        Cent r = core_neg(udivmod(core_neg(c1), c2, modulus));
+        modulus = core_neg(modulus);
         return r;
     }
     else if (cast(I)c2.hi < 0)
     {
-        return neg(udivmod(c1, neg(c2), modulus));
+        return core_neg(udivmod(c1, core_neg(c2), modulus));
     }
     else
         return udivmod(c1, c2, modulus);
@@ -718,7 +718,7 @@ bool ule(Cent c1, Cent c2)
  *      true if c1 > c2
  */
 pure
-bool gt(Cent c1, Cent c2)
+bool core_gt(Cent c1, Cent c2)
 {
     return (c1.hi == c2.hi)
         ? (c1.lo > c2.lo)
@@ -736,7 +736,7 @@ bool gt(Cent c1, Cent c2)
 pure
 bool ge(Cent c1, Cent c2)
 {
-    return !gt(c2, c1);
+    return !core_gt(c2, c1);
 }
 
 /****************************
@@ -750,7 +750,7 @@ bool ge(Cent c1, Cent c2)
 pure
 bool lt(Cent c1, Cent c2)
 {
-    return gt(c2, c1);
+    return core_gt(c2, c1);
 }
 
 /****************************
@@ -764,7 +764,7 @@ bool lt(Cent c1, Cent c2)
 pure
 bool le(Cent c1, Cent c2)
 {
-    return !gt(c1, c2);
+    return !core_gt(c1, c2);
 }
 
 /*******************************************************/
@@ -796,9 +796,9 @@ unittest
     const Cent C30 = { lo:30 };
     const Cent C100 = { lo:100 };
 
-    const Cent Cm1 =  neg(One);
-    const Cent Cm3 =  neg(C3);
-    const Cent Cm10 = neg(C10);
+    const Cent Cm1 =  core_neg(One);
+    const Cent Cm3 =  core_neg(C3);
+    const Cent Cm10 = core_neg(C10);
 
     const Cent C3_1 = { lo:1, hi:3 };
     const Cent C3_2 = { lo:2, hi:3 };
@@ -814,10 +814,10 @@ unittest
     const Cent C20_0 = { lo:0, hi:20 };
     const Cent C90_30 = { lo:30, hi:90 };
 
-    const Cent Cm10_0 = inc(com(C10_0)); // Cent(lo=0,  hi=-10);
-    const Cent Cm10_1 = inc(com(C10_1)); // Cent(lo=-1, hi=-11);
-    const Cent Cm10_3 = inc(com(C10_3)); // Cent(lo=-3, hi=-11);
-    const Cent Cm20_0 = inc(com(C20_0)); // Cent(lo=0,  hi=-20);
+    const Cent Cm10_0 = core_inc(core_com(C10_0)); // Cent(lo=0,  hi=-10);
+    const Cent Cm10_1 = core_inc(core_com(C10_1)); // Cent(lo=-1, hi=-11);
+    const Cent Cm10_3 = core_inc(core_com(C10_3)); // Cent(lo=-3, hi=-11);
+    const Cent Cm20_0 = core_inc(core_com(C20_0)); // Cent(lo=0,  hi=-20);
 
     enum Cent Cs_3 = { lo:3, hi:I.min };
 
@@ -847,43 +847,43 @@ unittest
     assert( !ugt(C9_3, C10_3) );
     assert( !ugt(C9_3, C9_3) );
 
-    assert( gt(C2, C1) );
-    assert( !gt(C1, C2) );
-    assert( !gt(C1, C1) );
-    assert( gt(C0, Cm1) );
-    assert( gt(Cm1, neg(C10)));
-    assert( !gt(Cm1, Cm1) );
-    assert( !gt(Cm1, C0) );
+    assert( core_gt(C2, C1) );
+    assert( !core_gt(C1, C2) );
+    assert( !core_gt(C1, C1) );
+    assert( core_gt(C0, Cm1) );
+    assert( core_gt(Cm1, core_neg(C10)));
+    assert( !core_gt(Cm1, Cm1) );
+    assert( !core_gt(Cm1, C0) );
 
     assert( !lt(C2, C1) );
     assert( !le(C2, C1) );
     assert( ge(C2, C1) );
 
-    assert(neg(C10_0) == Cm10_0);
-    assert(neg(C10_1) == Cm10_1);
-    assert(neg(C10_3) == Cm10_3);
+    assert(core_neg(C10_0) == Cm10_0);
+    assert(core_neg(C10_1) == Cm10_1);
+    assert(core_neg(C10_3) == Cm10_3);
 
-    assert(add(C7_1,C3_2) == C10_3);
-    assert(sub(C1,C2) == Cm1);
+    assert(core_add(C7_1,C3_2) == C10_3);
+    assert(core_sub(C1,C2) == Cm1);
 
-    assert(inc(C3_1) == C3_2);
-    assert(dec(C3_2) == C3_1);
+    assert(core_inc(C3_1) == C3_2);
+    assert(core_dec(C3_2) == C3_1);
 
-    assert(shl(C10,0) == C10);
-    assert(shl(C10,Ubits) == C10_0);
-    assert(shl(C10,1) == C20);
-    assert(shl(C10,Ubits * 2) == C0);
-    assert(shr(C10_0,0) == C10_0);
-    assert(shr(C10_0,Ubits) == C10);
-    assert(shr(C10_0,Ubits - 1) == C20);
-    assert(shr(C10_0,Ubits + 1) == C5);
-    assert(shr(C10_0,Ubits * 2) == C0);
-    assert(sar(C10_0,0) == C10_0);
-    assert(sar(C10_0,Ubits) == C10);
-    assert(sar(C10_0,Ubits - 1) == C20);
-    assert(sar(C10_0,Ubits + 1) == C5);
-    assert(sar(C10_0,Ubits * 2) == C0);
-    assert(sar(Cm1,Ubits * 2) == Cm1);
+    assert(core_shl(C10,0) == C10);
+    assert(core_shl(C10,Ubits) == C10_0);
+    assert(core_shl(C10,1) == C20);
+    assert(core_shl(C10,Ubits * 2) == C0);
+    assert(core_shr(C10_0,0) == C10_0);
+    assert(core_shr(C10_0,Ubits) == C10);
+    assert(core_shr(C10_0,Ubits - 1) == C20);
+    assert(core_shr(C10_0,Ubits + 1) == C5);
+    assert(core_shr(C10_0,Ubits * 2) == C0);
+    assert(core_sar(C10_0,0) == C10_0);
+    assert(core_sar(C10_0,Ubits) == C10);
+    assert(core_sar(C10_0,Ubits - 1) == C20);
+    assert(core_sar(C10_0,Ubits + 1) == C5);
+    assert(core_sar(C10_0,Ubits * 2) == C0);
+    assert(core_sar(Cm1,Ubits * 2) == Cm1);
 
     assert(shl1(C10) == C20);
     assert(shr1(C10_0) == C5_0);
@@ -897,21 +897,21 @@ unittest
     assert(udivmod(C10,C3, modulus) ==  C3);   assert(modulus == C1);
     assert(udivmod(C10,C0, modulus) == Cm1);   assert(modulus == C0);
     assert(udivmod(C2,C90_30, modulus) == C0); assert(modulus == C2);
-    assert(udiv(mul(C90_30, C2), C2) == C90_30);
-    assert(udiv(mul(C90_30, C2), C90_30) == C2);
+    assert(udiv(core_mul(C90_30, C2), C2) == C90_30);
+    assert(udiv(core_mul(C90_30, C2), C90_30) == C2);
 
-    assert(div(C10,C3) == C3);
-    assert(divmod( C10,  C3, modulus) ==  C3); assert(modulus ==  C1);
-    assert(divmod(Cm10,  C3, modulus) == Cm3); assert(modulus == Cm1);
-    assert(divmod( C10, Cm3, modulus) == Cm3); assert(modulus ==  C1);
-    assert(divmod(Cm10, Cm3, modulus) ==  C3); assert(modulus == Cm1);
-    assert(divmod(C2, C90_30, modulus) == C0); assert(modulus == C2);
-    assert(div(mul(C90_30, C2), C2) == C90_30);
-    assert(div(mul(C90_30, C2), C90_30) == C2);
+    assert(core_div(C10,C3) == C3);
+    assert(core_divmod( C10,  C3, modulus) ==  C3); assert(modulus ==  C1);
+    assert(core_divmod(Cm10,  C3, modulus) == Cm3); assert(modulus == Cm1);
+    assert(core_divmod( C10, Cm3, modulus) == Cm3); assert(modulus ==  C1);
+    assert(core_divmod(Cm10, Cm3, modulus) ==  C3); assert(modulus == Cm1);
+    assert(core_divmod(C2, C90_30, modulus) == C0); assert(modulus == C2);
+    assert(core_div(core_mul(C90_30, C2), C2) == C90_30);
+    assert(core_div(core_mul(C90_30, C2), C90_30) == C2);
 
     const Cent Cb1divb2 = { lo:0x4496aa309d4d4a2f, hi:U.max };
     const Cent Cb1modb2 = { lo:0xd83203d0fdc799b8, hi:U.max };
-    assert(divmod(Cbig_1, Cbig_2, modulus) == Cb1divb2);
+    assert(core_divmod(Cbig_1, Cbig_2, modulus) == Cb1divb2);
     assert(modulus == Cb1modb2);
 
     const Cent Cb1udivb2 = { lo:0x5fe0e9bace2bedad, hi:2 };
@@ -921,19 +921,19 @@ unittest
 
     const Cent Cb1divb3 = { lo:0xbfa6c02b5aff8b86, hi:U.max };
     const Cent Cb1udivb3 = { lo:0xd0b7d13b48cb350f, hi:0 };
-    assert(div(Cbig_1, Cbig_3) == Cb1divb3);
+    assert(core_div(Cbig_1, Cbig_3) == Cb1divb3);
     assert(udiv(Cbig_1, Cbig_3) == Cb1udivb3);
 
-    assert(mul(Cm10, C1) == Cm10);
-    assert(mul(C1, Cm10) == Cm10);
-    assert(mul(C9_3, C10) == C90_30);
-    assert(mul(Cs_3, C10) == C30);
-    assert(mul(Cm10, Cm10) == C100);
-    assert(mul(C20_0, Cm1) == Cm20_0);
+    assert(core_mul(Cm10, C1) == Cm10);
+    assert(core_mul(C1, Cm10) == Cm10);
+    assert(core_mul(C9_3, C10) == C90_30);
+    assert(core_mul(Cs_3, C10) == C30);
+    assert(core_mul(Cm10, Cm10) == C100);
+    assert(core_mul(C20_0, Cm1) == Cm20_0);
 
-    assert( or(C4_8, C3_1) == C7_9);
-    assert(and(C4_8, C7_9) == C4_8);
-    assert(xor(C4_8, C7_9) == C3_1);
+    assert( core_or(C4_8, C3_1) == C7_9);
+    assert(core_and(C4_8, C7_9) == C4_8);
+    assert(core_xor(C4_8, C7_9) == C3_1);
 
     assert(rol(Cm1,  1) == Cm1);
     assert(ror(Cm1, 45) == Cm1);
