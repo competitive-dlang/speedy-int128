@@ -17,21 +17,19 @@ nothrow:
 @safe:
 @nogc:
 
-alias I = long;
-alias U = ulong;
-enum Ubits = uint(U.sizeof * 8);
+enum Ubits = uint(ulong.sizeof * 8);
 
 struct Cent
 {
     version (LittleEndian)
     {
-        U lo;  // low 64 bits
-        U hi;  // high 64 bits
+        ulong lo;  // low 64 bits
+        ulong hi;  // high 64 bits
     }
     else
     {
-        U hi;  // high 64 bits
-        U lo;  // low 64 bits
+        ulong hi;  // high 64 bits
+        ulong lo;  // low 64 bits
     }
 }
 
@@ -209,13 +207,13 @@ Cent core_sar(Cent c, uint n)
     }
     else if (signshift >= Ubits)
     {
-        c.hi &= ~(U.max << (signshift - Ubits));
+        c.hi &= ~(ulong.max << (signshift - Ubits));
         c.hi |= signmask << (signshift - Ubits);
     }
     else
     {
         c.hi = signmask;
-        c.lo &= ~(U.max << signshift);
+        c.lo &= ~(ulong.max << signshift);
         c.lo |= signmask << signshift;
     }
     return c;
@@ -277,8 +275,8 @@ Cent core_xor(Cent c1, Cent c2)
 pure
 Cent core_add(Cent c1, Cent c2)
 {
-    U r = cast(U)(c1.lo + c2.lo);
-    const Cent ret = { lo:r, hi:cast(U)(c1.hi + c2.hi + (r < c1.lo)) };
+    ulong r = cast(ulong)(c1.lo + c2.lo);
+    const Cent ret = { lo:r, hi:cast(ulong)(c1.hi + c2.hi + (r < c1.lo)) };
     return ret;
 }
 
@@ -318,10 +316,10 @@ Cent core_mul(Cent c1, Cent c2)
     const c2h1 = c2.hi >> mulshift;
 
     const c1l0 = c1.lo & mulmask;
-    U r0 = c1l0 * c2l0;
-    U r1 = c1l0 * c2l1 + (r0 >> mulshift);
-    U r2 = c1l0 * c2h0 + (r1 >> mulshift);
-    U r3 = c1l0 * c2h1 + (r2 >> mulshift);
+    ulong r0 = c1l0 * c2l0;
+    ulong r1 = c1l0 * c2l1 + (r0 >> mulshift);
+    ulong r2 = c1l0 * c2h0 + (r1 >> mulshift);
+    ulong r3 = c1l0 * c2h1 + (r2 >> mulshift);
 
     const c1l1 = c1.lo >> mulshift;
     r1 = c1l1 * c2l0 + (r1 & mulmask);
@@ -374,7 +372,7 @@ Cent core_udivmod(Cent c1, Cent c2, out Cent modulus)
 
     // Divides a 128-bit dividend by a 64-bit divisor.
     // The result must fit in 64 bits.
-    static U udivmod128_64(Cent c1, U c2, out U modulus)
+    static ulong udivmod128_64(Cent c1, ulong c2, out ulong modulus)
     {
         // We work in base 2^^32
         enum base = 1UL << 32;
@@ -389,13 +387,13 @@ Cent core_udivmod(Cent c1, Cent c2, out Cent modulus)
         }
 
         // Computes [num1 num0] / den
-        static uint udiv96_64(U num1, uint num0, U den)
+        static uint udiv96_64(ulong num1, uint num0, ulong den)
         {
             // Extract both digits of the denominator
             const den1 = cast(uint)(den >> divshift);
             const den0 = cast(uint)(den & divmask);
             // Estimate ret as num1 / den1, and then correct it
-            U ret = num1 / den1;
+            ulong ret = num1 / den1;
             const t2 = (num1 % den1) * base + num0;
             const t1 = ret * den0;
             if (t1 > t2)
@@ -409,9 +407,9 @@ Cent core_udivmod(Cent c1, Cent c2, out Cent modulus)
         // We also shift number by the same amount. This cannot overflow because c1.hi < c2.
         const shift = (Ubits - 1) - bsr(c2);
         c2 <<= shift;
-        U num2 = c1.hi;
+        ulong num2 = c1.hi;
         num2 <<= shift;
-        num2 |= (c1.lo >> (-shift & 63)) & (-cast(I)shift >> 63);
+        num2 |= (c1.lo >> (-shift & 63)) & (-cast(long)shift >> 63);
         c1.lo <<= shift;
 
         // Extract the low digits of the numerator (after normalizing)
@@ -426,7 +424,7 @@ Cent core_udivmod(Cent c1, Cent c2, out Cent modulus)
         const q0 = udiv96_64(rem, num0, c2);
 
         modulus = (rem * base + num0 - q0 * c2) >> shift;
-        return (cast(U)q1 << divshift) | q0;
+        return (cast(ulong)q1 << divshift) | q0;
     }
 
     // Special cases
@@ -472,13 +470,13 @@ Cent core_udivmod(Cent c1, Cent c2, out Cent modulus)
 
     // Normalize the divisor so its MSB is 1
     // v1 = (c2 << shift) >> 64
-    U v1 = core_shl(c2, shift).hi;
+    ulong v1 = core_shl(c2, shift).hi;
 
     // To ensure no overflow.
     Cent u1 = core_shr1(c1);
 
     // Get quotient from divide unsigned operation.
-    U rem_ignored;
+    ulong rem_ignored;
     const Cent q1 = { lo:udivmod128_64(u1, v1, rem_ignored) };
 
     // Undo normalization and division of c1 by 2.
@@ -536,9 +534,9 @@ Cent core_divmod(Cent c1, Cent c2, out Cent modulus)
 {
     /* Muck about with the signs so we can use the unsigned divide
      */
-    if (cast(I)c1.hi < 0)
+    if (cast(long)c1.hi < 0)
     {
-        if (cast(I)c2.hi < 0)
+        if (cast(long)c2.hi < 0)
         {
             Cent r = core_udivmod(core_neg(c1), core_neg(c2), modulus);
             modulus = core_neg(modulus);
@@ -548,7 +546,7 @@ Cent core_divmod(Cent c1, Cent c2, out Cent modulus)
         modulus = core_neg(modulus);
         return r;
     }
-    else if (cast(I)c2.hi < 0)
+    else if (cast(long)c2.hi < 0)
     {
         return core_neg(core_udivmod(c1, core_neg(c2), modulus));
     }
@@ -597,7 +595,7 @@ bool core_gt(Cent c1, Cent c2)
 {
     return (c1.hi == c2.hi)
         ? (c1.lo > c2.lo)
-        : (cast(I)c1.hi > cast(I)c2.hi);
+        : (cast(long)c1.hi > cast(long)c2.hi);
 }
 
 /*******************************************************/
@@ -652,7 +650,7 @@ unittest
     const Cent Cm10_3 = core_inc(core_com(C10_3)); // Cent(lo=-3, hi=-11);
     const Cent Cm20_0 = core_inc(core_com(C20_0)); // Cent(lo=0,  hi=-20);
 
-    enum Cent Cs_3 = { lo:3, hi:I.min };
+    enum Cent Cs_3 = { lo:3, hi:long.min };
 
     const Cent Cbig_1 = { lo:0xa3ccac1832952398, hi:0xc3ac542864f652f8 };
     const Cent Cbig_2 = { lo:0x5267b85f8a42fc20, hi:0 };
@@ -742,8 +740,8 @@ unittest
     assert(core_div(core_mul(C90_30, C2), C2) == C90_30);
     assert(core_div(core_mul(C90_30, C2), C90_30) == C2);
 
-    const Cent Cb1divb2 = { lo:0x4496aa309d4d4a2f, hi:U.max };
-    const Cent Cb1modb2 = { lo:0xd83203d0fdc799b8, hi:U.max };
+    const Cent Cb1divb2 = { lo:0x4496aa309d4d4a2f, hi:ulong.max };
+    const Cent Cb1modb2 = { lo:0xd83203d0fdc799b8, hi:ulong.max };
     assert(core_divmod(Cbig_1, Cbig_2, modulus) == Cb1divb2);
     assert(modulus == Cb1modb2);
 
@@ -752,7 +750,7 @@ unittest
     assert(core_udivmod(Cbig_1, Cbig_2, modulus) == Cb1udivb2);
     assert(modulus == Cb1umodb2);
 
-    const Cent Cb1divb3 = { lo:0xbfa6c02b5aff8b86, hi:U.max };
+    const Cent Cb1divb3 = { lo:0xbfa6c02b5aff8b86, hi:ulong.max };
     const Cent Cb1udivb3 = { lo:0xd0b7d13b48cb350f, hi:0 };
     assert(core_div(Cbig_1, Cbig_3) == Cb1divb3);
     assert(core_udiv(Cbig_1, Cbig_3) == Cb1udivb3);
