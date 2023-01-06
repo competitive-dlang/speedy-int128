@@ -28,6 +28,8 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+require "json"
+require "digest"
 
 # This function "compiles" a D code snippet by trying to remove as many whitespaces as
 # possible and producing a single line.
@@ -63,7 +65,10 @@ def preprocess_src(data)
   data = remove_whitespaces(data).strip
 
   # remove the module declaration from the top
-  data = $1 if data =~ /^module\s+[^\;]+\;(.*)$/m
+  if data =~ /^module\s+([^\;]+)\;(.*)$/m
+    data = $2
+    $first_module_name = $1.strip unless $first_module_name
+  end
 
   # remove imports, except for imports from the standard library (prefixed by std/core/ldc/gdc)
   # strip the 'private'/'public'/'package' prefix because it is meaningles in a single file
@@ -81,31 +86,83 @@ def preprocess_src(data)
 end
 
 # some tests
-abort "test failed" unless preprocess_src("a + b") == "a+b"
-abort "test failed" unless preprocess_src("- -a") == "- -a"
-abort "test failed" unless preprocess_src("module x; import foobar;") == ";"
-abort "test failed" unless preprocess_src("module x; import std : writeln;") == "import std:writeln;"
+abort "test failed\n" unless preprocess_src("a + b") == "a+b"
+abort "test failed\n" unless preprocess_src("- -a") == "- -a"
+abort "test failed\n" unless preprocess_src("module x; import foobar;") == ";"
+abort "test failed\n" unless preprocess_src("module x; import std : writeln;") == "import std:writeln;"
 
 sources = []
 
+# command line switches
 $describe = false
 $strip_unittests = false
 
-require "json"
+if ARGV.size == 0
+  puts("Usage: #{$PROGRAM_NAME} [--describe] [--strip-unittests] <list_of_D source_files_or_dub.json>")
+  puts("Options:")
+  puts("  --describe        : add comment with some extra information from git to the output.")
+  puts("  --strip-unittests : remove unittests from the code for extra size reduction.")
+  exit(0)
+end
+
+# process the command line
 ARGV.each do |arg|
   if arg =~ /^\-\-(.*)/
     case $1
       when "describe" then $describe = true
       when "strip-unittests" then $strip_unittests = true
-      else abort "unknown option --#{$1}\n"
+      else abort "Error: unknown option '--#{$1}'\n"
     end
   elsif arg =~ /dub\.json$/
     data = JSON.parse(File.read(arg))
-    abort "bad json" unless data.has_key?("sourceFiles")
+    abort "bad json file #{arg}\n" unless data.has_key?("sourceFiles")
     data["sourceFiles"].each {|sourcefile| sources.push(File.join(File.dirname(arg), sourcefile)) }
   else
     sources.push(arg)
   end
 end
 
-puts sources.map {|filename| preprocess_src(File.read(filename)) }.join("")
+$first_module_name = nil
+onelinerized_source = sources.map {|filename| preprocess_src(File.read(filename)) }.join(" ")
+
+def strip_unittests(data)
+  if data =~ /^(.*)?[^\;\}]*unittest\{(.*)$/m
+    part1 = $1
+    part2 = $2
+    brackets_cnt = 1
+    skip = true
+    filtered_part2 = ""
+    part2.each_char do |ch|
+      filtered_part2 += ch unless skip
+      if ch == "{"
+        brackets_cnt += 1
+      elsif ch == "}"
+        skip = false if (brackets_cnt -= 1) <= 0
+      end
+    end
+    data = part1 + filtered_part2
+    return strip_unittests(data)
+  end
+  return data
+end
+
+onelinerized_source = strip_unittests(onelinerized_source) if $strip_unittests
+
+prefix = ""
+if $describe
+  git_url = `git remote get-url origin`.strip
+  if git_url =~ /^git\@github\.com\:(.*)\.git$/ || git_url =~ /^https\:\/\/github\.com\/(.*)\.git$/
+    git_url = "https://github.com/" + $1
+  end
+  tag_describe = `git describe --tag --dirty`.strip
+  if $first_module_name && tag_describe =~ /^v/
+    prefix += "/* 'import #{$first_module_name};' #{tag_describe} from #{git_url} "
+    prefix += "(size: #{onelinerized_source.size}, "
+    prefix += "hash:#{Digest::SHA256.hexdigest(onelinerized_source)[0 .. 8]}) */ "
+  else
+    prefix += "/* code from #{git_url} (size: #{onelinerized_source.size}, "
+    prefix += "hash:#{Digest::SHA256.hexdigest(onelinerized_source)[0 .. 8]}) */ "
+  end
+end
+
+puts prefix + onelinerized_source
