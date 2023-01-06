@@ -123,10 +123,10 @@ ARGV.each do |arg|
 end
 
 $first_module_name = nil
-onelinerized_source = sources.map {|filename| preprocess_src(File.read(filename)) }.join(" ")
+onelinerized_source = sources.map {|filename| "version(all){" + preprocess_src(File.read(filename)) + "}"}.join("")
 
 def strip_unittests(data)
-  if data =~ /^(.*)?[^\;\}]*unittest\{(.*)$/m
+  if data =~ /^(.*?)[^\;\}]*unittest\{(.*)$/m
     part1 = $1
     part2 = $2
     brackets_cnt = 1
