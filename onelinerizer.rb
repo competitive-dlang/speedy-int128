@@ -126,23 +126,40 @@ $first_module_name = nil
 onelinerized_source = sources.map {|filename| "version(all){" + preprocess_src(File.read(filename)) + "}"}.join("")
 
 def strip_unittests(data)
-  if data =~ /^(.*?)[^\;\}]*unittest\{(.*)$/m
-    part1 = $1
-    part2 = $2
+  def delete_prefix_until_the_closing_curly_bracket(data)
     brackets_cnt = 1
     skip = true
-    filtered_part2 = ""
-    part2.each_char do |ch|
-      filtered_part2 += ch unless skip
+    filtered_data = ""
+    data.each_char do |ch|
+      filtered_data += ch unless skip
       if ch == "{"
         brackets_cnt += 1
       elsif ch == "}"
         skip = false if (brackets_cnt -= 1) <= 0
       end
     end
-    data = part1 + filtered_part2
-    return strip_unittests(data)
+    return filtered_data
   end
+
+  # FIXME: string literals containing the "unittest" substring or curly
+  # brackets may cause troubles here!
+
+  # Handle "unittest { ... }". This is relatively simple.
+  if data =~ /^(.*?)[^\;\}]*unittest\{(.*)$/m
+    part1 = $1
+    part2 = delete_prefix_until_the_closing_curly_bracket($2)
+    return strip_unittests(part1 + part2)
+  end
+
+  # Handle "version(unittest) { ... }". Completely erasing it is too tricky,
+  # because it may have an "else" branch too. So just substitute it
+  # with "version(none){}" for now.
+  if data =~ /^(|.*?\W)version\(unittest\)\{(.*)$/m
+    part1 = $1
+    part2 = delete_prefix_until_the_closing_curly_bracket($2)
+    return strip_unittests(part1 + "version(none){}" + part2)
+  end
+
   return data
 end
 
