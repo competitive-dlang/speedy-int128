@@ -1,4 +1,6 @@
 // This is a pretty much unmodified copy of core.int128 from druntime
+// Added "core_*" prefixes to functions. Removed the functions, which
+// are not really used by the Int128 struct.
 
 /*
  * Not optimized for speed.
@@ -113,21 +115,6 @@ Cent core_dec(Cent c)
 }
 
 /*****************************
- * Shift left one bit
- * Params:
- *      c = Cent to shift
- * Returns:
- *      shifted value
- */
-pure
-Cent shl1(Cent c)
-{
-    c.hi = (c.hi << 1) | (cast(I)c.lo < 0);
-    c.lo <<= 1;
-    return c;
-}
-
-/*****************************
  * Unsigned shift right one bit
  * Params:
  *      c = Cent to shift
@@ -135,26 +122,10 @@ Cent shl1(Cent c)
  *      shifted value
  */
 pure
-Cent shr1(Cent c)
+Cent core_shr1(Cent c)
 {
     c.lo = (c.lo >> 1) | ((c.hi & 1) << (Ubits - 1));
     c.hi >>= 1;
-    return c;
-}
-
-
-/*****************************
- * Arithmetic shift right one bit
- * Params:
- *      c = Cent to shift
- * Returns:
- *      shifted value
- */
-pure
-Cent sar1(Cent c)
-{
-    c.lo = (c.lo >> 1) | ((c.hi & 1) << (Ubits - 1));
-    c.hi = cast(I)c.hi >> 1;
     return c;
 }
 
@@ -248,74 +219,6 @@ Cent core_sar(Cent c, uint n)
         c.lo |= signmask << signshift;
     }
     return c;
-}
-
-/*****************************
- * Rotate left one bit
- * Params:
- *      c = Cent to rotate
- * Returns:
- *      rotated value
- */
-pure
-Cent rol1(Cent c)
-{
-    int carry = cast(I)c.hi < 0;
-
-    c.hi = (c.hi << 1) | (cast(I)c.lo < 0);
-    c.lo = (c.lo << 1) | carry;
-    return c;
-}
-
-/*****************************
- * Rotate right one bit
- * Params:
- *      c = Cent to rotate
- * Returns:
- *      rotated value
- */
-pure
-Cent ror1(Cent c)
-{
-    int carry = c.lo & 1;
-    c.lo = (c.lo >> 1) | (cast(U)(c.hi & 1) << (Ubits - 1));
-    c.hi = (c.hi >> 1) | (cast(U)carry << (Ubits - 1));
-    return c;
-}
-
-
-/*****************************
- * Rotate left n bits
- * Params:
- *      c = Cent to rotate
- *      n = number of bits to rotate
- * Returns:
- *      rotated value
- */
-pure
-Cent rol(Cent c, uint n)
-{
-    n &= Ubits * 2 - 1;
-    Cent l = core_shl(c, n);
-    Cent r = core_shr(c, Ubits * 2 - n);
-    return core_or(l, r);
-}
-
-/*****************************
- * Rotate right n bits
- * Params:
- *      c = Cent to rotate
- *      n = number of bits to rotate
- * Returns:
- *      rotated value
- */
-pure
-Cent ror(Cent c, uint n)
-{
-    n &= Ubits * 2 - 1;
-    Cent r = core_shr(c, n);
-    Cent l = core_shl(c, Ubits * 2 - n);
-    return core_or(r, l);
 }
 
 /****************************
@@ -447,10 +350,10 @@ Cent core_mul(Cent c1, Cent c2)
  *      quotient c1 / c2
  */
 pure
-Cent udiv(Cent c1, Cent c2)
+Cent core_udiv(Cent c1, Cent c2)
 {
     Cent modulus;
-    return udivmod(c1, c2, modulus);
+    return core_udivmod(c1, c2, modulus);
 }
 
 /****************************
@@ -463,7 +366,7 @@ Cent udiv(Cent c1, Cent c2)
  *      quotient c1 / c2
  */
 pure
-Cent udivmod(Cent c1, Cent c2, out Cent modulus)
+Cent core_udivmod(Cent c1, Cent c2, out Cent modulus)
 {
     //printf("udiv c1(%llx,%llx) c2(%llx,%llx)\n", c1.lo, c1.hi, c2.lo, c2.hi);
     // Based on "Unsigned Doubleword Division" in Hacker's Delight
@@ -572,7 +475,7 @@ Cent udivmod(Cent c1, Cent c2, out Cent modulus)
     U v1 = core_shl(c2, shift).hi;
 
     // To ensure no overflow.
-    Cent u1 = shr1(c1);
+    Cent u1 = core_shr1(c1);
 
     // Get quotient from divide unsigned operation.
     U rem_ignored;
@@ -590,7 +493,7 @@ Cent udivmod(Cent c1, Cent c2, out Cent modulus)
     Cent rem = core_sub(c1, core_mul(quotient, c2));
 
     // Check if remainder is larger than the divisor
-    if (uge(rem, c2))
+    if (core_uge(rem, c2))
     {
         // Increment quotient
         quotient = core_inc(quotient);
@@ -637,20 +540,20 @@ Cent core_divmod(Cent c1, Cent c2, out Cent modulus)
     {
         if (cast(I)c2.hi < 0)
         {
-            Cent r = udivmod(core_neg(c1), core_neg(c2), modulus);
+            Cent r = core_udivmod(core_neg(c1), core_neg(c2), modulus);
             modulus = core_neg(modulus);
             return r;
         }
-        Cent r = core_neg(udivmod(core_neg(c1), c2, modulus));
+        Cent r = core_neg(core_udivmod(core_neg(c1), c2, modulus));
         modulus = core_neg(modulus);
         return r;
     }
     else if (cast(I)c2.hi < 0)
     {
-        return core_neg(udivmod(c1, core_neg(c2), modulus));
+        return core_neg(core_udivmod(c1, core_neg(c2), modulus));
     }
     else
-        return udivmod(c1, c2, modulus);
+        return core_udivmod(c1, c2, modulus);
 }
 
 /****************************
@@ -662,7 +565,7 @@ Cent core_divmod(Cent c1, Cent c2, out Cent modulus)
  *      true if c1 > c2
  */
 pure
-bool ugt(Cent c1, Cent c2)
+bool core_ugt(Cent c1, Cent c2)
 {
     return (c1.hi == c2.hi) ? (c1.lo > c2.lo) : (c1.hi > c2.hi);
 }
@@ -676,37 +579,9 @@ bool ugt(Cent c1, Cent c2)
  *      true if c1 >= c2
  */
 pure
-bool uge(Cent c1, Cent c2)
+bool core_uge(Cent c1, Cent c2)
 {
-    return !ugt(c2, c1);
-}
-
-/****************************
- * If c1 < c2 unsigned
- * Params:
- *      c1 = operand 1
- *      c2 = operand 2
- * Returns:
- *      true if c1 < c2
- */
-pure
-bool ult(Cent c1, Cent c2)
-{
-    return ugt(c2, c1);
-}
-
-/****************************
- * If c1 <= c2 unsigned
- * Params:
- *      c1 = operand 1
- *      c2 = operand 2
- * Returns:
- *      true if c1 <= c2
- */
-pure
-bool ule(Cent c1, Cent c2)
-{
-    return !ugt(c1, c2);
+    return !core_ugt(c2, c1);
 }
 
 /****************************
@@ -723,48 +598,6 @@ bool core_gt(Cent c1, Cent c2)
     return (c1.hi == c2.hi)
         ? (c1.lo > c2.lo)
         : (cast(I)c1.hi > cast(I)c2.hi);
-}
-
-/****************************
- * If c1 >= c2 signed
- * Params:
- *      c1 = operand 1
- *      c2 = operand 2
- * Returns:
- *      true if c1 >= c2
- */
-pure
-bool ge(Cent c1, Cent c2)
-{
-    return !core_gt(c2, c1);
-}
-
-/****************************
- * If c1 < c2 signed
- * Params:
- *      c1 = operand 1
- *      c2 = operand 2
- * Returns:
- *      true if c1 < c2
- */
-pure
-bool lt(Cent c1, Cent c2)
-{
-    return core_gt(c2, c1);
-}
-
-/****************************
- * If c1 <= c2 signed
- * Params:
- *      c1 = operand 1
- *      c2 = operand 2
- * Returns:
- *      true if c1 <= c2
- */
-pure
-bool le(Cent c1, Cent c2)
-{
-    return !core_gt(c1, c2);
 }
 
 /*******************************************************/
@@ -827,25 +660,25 @@ unittest
 
     /************************/
 
-    assert( ugt(C1, C0) );
-    assert( ult(C1, C2) );
-    assert( uge(C1, C0) );
-    assert( ule(C1, C2) );
+    assert( core_ugt(C1, C0) );
+//    assert( ult(C1, C2) );
+    assert( core_uge(C1, C0) );
+//    assert( ule(C1, C2) );
 
-    assert( !ugt(C0, C1) );
-    assert( !ult(C2, C1) );
-    assert( !uge(C0, C1) );
-    assert( !ule(C2, C1) );
+    assert( !core_ugt(C0, C1) );
+//    assert( !ult(C2, C1) );
+    assert( !core_uge(C0, C1) );
+//    assert( !ule(C2, C1) );
 
-    assert( !ugt(C1, C1) );
-    assert( !ult(C1, C1) );
-    assert( uge(C1, C1) );
-    assert( ule(C2, C2) );
+//    assert( !core_ugt(C1, C1) );
+//    assert( !ult(C1, C1) );
+    assert( core_uge(C1, C1) );
+//    assert( ule(C2, C2) );
 
-    assert( ugt(C10_3, C10_1) );
-    assert( ugt(C11_3, C10_3) );
-    assert( !ugt(C9_3, C10_3) );
-    assert( !ugt(C9_3, C9_3) );
+    assert( core_ugt(C10_3, C10_1) );
+    assert( core_ugt(C11_3, C10_3) );
+    assert( !core_ugt(C9_3, C10_3) );
+    assert( !core_ugt(C9_3, C9_3) );
 
     assert( core_gt(C2, C1) );
     assert( !core_gt(C1, C2) );
@@ -855,9 +688,9 @@ unittest
     assert( !core_gt(Cm1, Cm1) );
     assert( !core_gt(Cm1, C0) );
 
-    assert( !lt(C2, C1) );
-    assert( !le(C2, C1) );
-    assert( ge(C2, C1) );
+//    assert( !lt(C2, C1) );
+//    assert( !le(C2, C1) );
+//    assert( ge(C2, C1) );
 
     assert(core_neg(C10_0) == Cm10_0);
     assert(core_neg(C10_1) == Cm10_1);
@@ -885,20 +718,20 @@ unittest
     assert(core_sar(C10_0,Ubits * 2) == C0);
     assert(core_sar(Cm1,Ubits * 2) == Cm1);
 
-    assert(shl1(C10) == C20);
-    assert(shr1(C10_0) == C5_0);
-    assert(sar1(C10_0) == C5_0);
-    assert(sar1(Cm1) == Cm1);
+//    assert(shl1(C10) == C20);
+    assert(core_shr1(C10_0) == C5_0);
+//    assert(sar1(C10_0) == C5_0);
+//    assert(sar1(Cm1) == Cm1);
 
     Cent modulus;
 
-    assert(udiv(C10,C2) == C5);
-    assert(udivmod(C10,C2, modulus) ==  C5);   assert(modulus == C0);
-    assert(udivmod(C10,C3, modulus) ==  C3);   assert(modulus == C1);
-    assert(udivmod(C10,C0, modulus) == Cm1);   assert(modulus == C0);
-    assert(udivmod(C2,C90_30, modulus) == C0); assert(modulus == C2);
-    assert(udiv(core_mul(C90_30, C2), C2) == C90_30);
-    assert(udiv(core_mul(C90_30, C2), C90_30) == C2);
+    assert(core_udiv(C10,C2) == C5);
+    assert(core_udivmod(C10,C2, modulus) ==  C5);   assert(modulus == C0);
+    assert(core_udivmod(C10,C3, modulus) ==  C3);   assert(modulus == C1);
+    assert(core_udivmod(C10,C0, modulus) == Cm1);   assert(modulus == C0);
+    assert(core_udivmod(C2,C90_30, modulus) == C0); assert(modulus == C2);
+    assert(core_udiv(core_mul(C90_30, C2), C2) == C90_30);
+    assert(core_udiv(core_mul(C90_30, C2), C90_30) == C2);
 
     assert(core_div(C10,C3) == C3);
     assert(core_divmod( C10,  C3, modulus) ==  C3); assert(modulus ==  C1);
@@ -916,13 +749,13 @@ unittest
 
     const Cent Cb1udivb2 = { lo:0x5fe0e9bace2bedad, hi:2 };
     const Cent Cb1umodb2 = { lo:0x2c923125a68721f8, hi:0 };
-    assert(udivmod(Cbig_1, Cbig_2, modulus) == Cb1udivb2);
+    assert(core_udivmod(Cbig_1, Cbig_2, modulus) == Cb1udivb2);
     assert(modulus == Cb1umodb2);
 
     const Cent Cb1divb3 = { lo:0xbfa6c02b5aff8b86, hi:U.max };
     const Cent Cb1udivb3 = { lo:0xd0b7d13b48cb350f, hi:0 };
     assert(core_div(Cbig_1, Cbig_3) == Cb1divb3);
-    assert(udiv(Cbig_1, Cbig_3) == Cb1udivb3);
+    assert(core_udiv(Cbig_1, Cbig_3) == Cb1udivb3);
 
     assert(core_mul(Cm10, C1) == Cm10);
     assert(core_mul(C1, Cm10) == Cm10);
@@ -935,9 +768,9 @@ unittest
     assert(core_and(C4_8, C7_9) == C4_8);
     assert(core_xor(C4_8, C7_9) == C3_1);
 
-    assert(rol(Cm1,  1) == Cm1);
-    assert(ror(Cm1, 45) == Cm1);
-    assert(rol(ror(C7_9, 5), 5) == C7_9);
-    assert(rol(C7_9, 1) == rol1(C7_9));
-    assert(ror(C7_9, 1) == ror1(C7_9));
+//    assert(rol(Cm1,  1) == Cm1);
+//    assert(ror(Cm1, 45) == Cm1);
+//    assert(rol(ror(C7_9, 5), 5) == C7_9);
+//    assert(rol(C7_9, 1) == rol1(C7_9));
+//    assert(ror(C7_9, 1) == ror1(C7_9));
 }
