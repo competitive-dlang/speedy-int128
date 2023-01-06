@@ -37,7 +37,7 @@ module speedy.int128_core_ldc;
 
 version (LDC) {
 import ldc.llvmasm;
-import speedy.int128_core_fallback : Cent;
+import speedy.int128_core : Cent;
 
 nothrow:
 @safe:

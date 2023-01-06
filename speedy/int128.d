@@ -13,7 +13,7 @@
  */
 module speedy.int128;
 
-private import speedy.int128_core_fallback;
+private import speedy.int128_core;
 private import speedy.int128_core_ldc;
 
 /***********************************

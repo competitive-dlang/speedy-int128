@@ -11,7 +11,7 @@
  * Source:    $(DRUNTIMESRC core/_int128.d)
  */
 
-module speedy.int128_core_fallback;
+module speedy.int128_core;
 
 nothrow:
 @safe:
