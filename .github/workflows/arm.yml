@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    name: dub
+    name: benchmark
     runs-on: buildjet-2vcpu-ubuntu-2204-arm
     steps:
       - uses: actions/checkout@v2
@@ -13,7 +13,7 @@ jobs:
           sudo dpkg --add-architecture armhf
           sudo apt-get update && sudo apt-get install libev-dev libevent-dev libsqlite3-dev ldc:armhf gcc-arm-linux-gnueabihf -y
 
-      - name: Download binary LDC 1.30.0 release for aarch64
+      - name: Download binary LDC 1.30.0 release for aarch64 and also use DUB from it
         run: |
           wget https://github.com/ldc-developers/ldc/releases/download/v1.30.0/ldc2-1.30.0-linux-aarch64.tar.xz
           tar -xJf ldc2-1.30.0-linux-aarch64.tar.xz
@@ -26,17 +26,17 @@ jobs:
           DFLAGS="-unittest -g -gcc=arm-linux-gnueabihf-gcc" ./dub test --compiler=ldc2
           DFLAGS="-unittest -g -O -gcc=arm-linux-gnueabihf-gcc" ./dub test --compiler=ldc2
 
-      - name: Run benchmark for 32-bit LDC 1.28.0 (speedy.int128)
+      - name: Run benchmark for Ubuntu's 32-bit LDC 1.28.0 (speedy.int128)
         run: |
           DFLAGS="-gcc=arm-linux-gnueabihf-gcc" ./dub build --single --build release --config=speedy --compiler=ldc2 --force benchmark.d
           time ./benchmark && time ./benchmark
 
-      - name: Uninstall 32-bit armhf LDC and get LDC, GDC 9/12 and DUB from the Ubuntu reposotory
-        run: sudo apt-get install ldc gdc-9 gdc-12 dub -y
+      - name: Uninstall 32-bit armhf LDC and get 64-bit LDC, GDC 9 and GDC 12 from the Ubuntu repository
+        run: sudo apt-get install ldc gdc-9 gdc-12 -y
 
       - name: Show versions
         run: |
-          dub --version
+          ./dub --version
           ldc2 --version
           ./ldc2-1.30.0 --version
           gdc-9 --version
@@ -46,10 +46,10 @@ jobs:
 
       - name: Run 64-bit tests
         run: |
-          dub test --compiler=ldc2
-          DFLAGS="-unittest -O -g" dub test --compiler=ldc2
-          dub test --compiler=./ldc2-1.30.0
-          DFLAGS="-unittest -O -g" dub test --compiler=./ldc2-1.30.0
+          ./dub test --compiler=ldc2
+          DFLAGS="-unittest -O -g" ./dub test --compiler=ldc2
+          ./dub test --compiler=./ldc2-1.30.0
+          DFLAGS="-unittest -O -g" ./dub test --compiler=./ldc2-1.30.0
 
       - name: Run benchmark for GCC
         run: |
@@ -63,25 +63,30 @@ jobs:
 
       - name: Run benchmark for GDC 9 (speedy.int128)
         run: |
-          dub build --single --build release --config=speedy --compiler=gdc-9 --force benchmark.d
+          ./dub build --single --build release --config=speedy --compiler=gdc-9 --force benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for GDC 12 (std.int128)
         run: |
-          dub build --single --build release --config=std --compiler=gdc-12 --force benchmark.d
+          ./dub build --single --build release --config=std --compiler=gdc-12 --force benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for GDC 12 (speedy.int128)
         run: |
-          dub build --single --build release --config=speedy --compiler=gdc-12 --force benchmark.d
+          ./dub build --single --build release --config=speedy --compiler=gdc-12 --force benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for LDC 1.30.0 (std.int128)
         run: |
-          dub build --single --build release --config=std --compiler=./ldc2-1.30.0 --force benchmark.d
+          ./dub build --single --build release --config=std --compiler=./ldc2-1.30.0 --force benchmark.d
           time ./benchmark && time ./benchmark
 
       - name: Run benchmark for LDC 1.30.0 (speedy.int128)
         run: |
-          dub build --single --build release --config=speedy --compiler=./ldc2-1.30.0 --force benchmark.d
+          ./dub build --single --build release --config=speedy --compiler=./ldc2-1.30.0 --force benchmark.d
+          time ./benchmark && time ./benchmark
+
+      - name: Run benchmark for Ubuntu's 64-bit LDC 1.28.0 (speedy.int128)
+        run: |
+          ./dub build --single --build release --config=speedy --compiler=ldc2 --force benchmark.d
           time ./benchmark && time ./benchmark
