@@ -97,7 +97,6 @@ public struct Int128
      * Params:
      *  lo = signed lower 64 bits
      */
-    pragma(inline, true)
     this(long lo)
     {
         data.lo = lo;
@@ -110,7 +109,6 @@ public struct Int128
      * Params:
      *  lo = unsigned lower 64 bits
      */
-    pragma(inline, true)
     this(ulong lo)
     {
         data.lo = lo;
@@ -123,7 +121,6 @@ public struct Int128
      *  hi = upper 64 bits
      *  lo = lower 64 bits
      */
-    pragma(inline, true)
     this(long hi, long lo)
     {
         data.hi = hi;
@@ -135,7 +132,6 @@ public struct Int128
      * Params:
      *  data = Cent data
      */
-    pragma(inline, true)
     this(Cent data)
     {
         this.data = data;
@@ -144,7 +140,6 @@ public struct Int128
     /********************
      * Returns: hash value for Int128
      */
-    pragma(inline, true)
     size_t toHash() const
     {
         return cast(size_t)((data.lo & 0xFFFF_FFFF) + (data.hi & 0xFFFF_FFFF) + (data.lo >> 32) + (data.hi >> 32));
@@ -155,7 +150,6 @@ public struct Int128
      * Params: lo = signed value to compare with
      * Returns: true if Int128 equals value
      */
-    pragma(inline, true)
     bool opEquals(long lo) const
     {
         return data.lo == lo && data.hi == (lo >> 63);
@@ -166,7 +160,6 @@ public struct Int128
      * Params: lo = unsigned value to compare with
      * Returns: true if Int128 equals value
      */
-    pragma(inline, true)
     bool opEquals(ulong lo) const
     {
         return data.hi == 0 && data.lo == lo;
@@ -177,7 +170,6 @@ public struct Int128
      * Params: op2 = value to compare with
      * Returns: true if Int128 equals value
      */
-    pragma(inline, true)
     bool opEquals(Int128 op2) const
     {
         return data.hi == op2.data.hi && data.lo == op2.data.lo;
@@ -187,7 +179,6 @@ public struct Int128
      * Params: op = "+"
      * Returns: lvalue of result
      */
-    pragma(inline, true)
     Int128 opUnary(string op)() const
         if (op == "+")
     {
@@ -198,7 +189,6 @@ public struct Int128
      * Params: op = "-", "~"
      * Returns: lvalue of result
      */
-    pragma(inline, true)
     Int128 opUnary(string op)() const
         if (op == "-" || op == "~")
     {
@@ -212,7 +202,6 @@ public struct Int128
      * Params: op = "++", "--"
      * Returns: lvalue of result
      */
-    pragma(inline, true)
     Int128 opUnary(string op)()
         if (op == "++" || op == "--")
     {
@@ -229,7 +218,6 @@ public struct Int128
      * Params: T = bool
      * Returns: boolean result
      */
-    pragma(inline, true)
     bool opCast(T : bool)() const
     {
         return tst(this.data);
@@ -241,7 +229,6 @@ public struct Int128
      *   op2 = second operand
      * Returns: value after the operation is applied
      */
-    pragma(inline, true)
     Int128 opBinary(string op)(Int128 op2) const
         if (op == "+" || op == "-" ||
             op == "*" || op == "/" || op == "%" ||
@@ -272,7 +259,6 @@ public struct Int128
     }
 
     /// ditto
-    pragma(inline, true)
     Int128 opBinary(string op)(long op2) const
         if (op == "+" || op == "-" ||
             op == "*" || op == "/" || op == "%" ||
@@ -282,7 +268,6 @@ public struct Int128
     }
 
     /// ditto
-    pragma(inline, true)
     Int128 opBinaryRight(string op)(long op2) const
         if (op == "+" || op == "-" ||
             op == "*" || op == "/" || op == "%" ||
@@ -292,7 +277,6 @@ public struct Int128
     }
 
     /// ditto
-    pragma(inline, true)
     Int128 opBinary(string op)(long op2) const
         if (op == "<<")
     {
@@ -300,7 +284,6 @@ public struct Int128
     }
 
     /// ditto
-    pragma(inline, true)
     Int128 opBinary(string op)(long op2) const
         if (op == ">>")
     {
@@ -308,7 +291,6 @@ public struct Int128
     }
 
     /// ditto
-    pragma(inline, true)
     Int128 opBinary(string op)(long op2) const
         if (op == ">>>")
     {
@@ -320,7 +302,6 @@ public struct Int128
      *   op2 = second operand
      * Returns: lvalue of updated left operand
      */
-    pragma(inline, true)
     ref Int128 opOpAssign(string op)(Int128 op2)
         if (op == "+" || op == "-" ||
             op == "*" || op == "/" || op == "%" ||
@@ -332,7 +313,6 @@ public struct Int128
     }
 
     /// ditto
-    pragma(inline, true)
     ref Int128 opOpAssign(string op)(long op2)
         if (op == "+" || op == "-" ||
             op == "*" || op == "/" || op == "%" ||
@@ -347,7 +327,6 @@ public struct Int128
      * Params: op2 = right hand operand
      * Returns: -1 for less than, 0 for equals, 1 for greater than
      */
-    pragma(inline, true)
     int opCmp(Int128 op2) const
     {
         return this == op2 ? 0 : gt(this.data, op2.data) * 2 - 1;
@@ -357,7 +336,6 @@ public struct Int128
      * Params: op2 = right hand operand
      * Returns: -1 for less than, 0 for equals, 1 for greater than
      */
-    pragma(inline, true)
     int opCmp(long op2) const
     {
         return opCmp(Int128(0, op2));

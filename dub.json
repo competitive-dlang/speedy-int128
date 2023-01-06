@@ -3,6 +3,7 @@
 	"description": "An experiment to speed up the 128-bit integer type",
 	"authors": ["Siarhei Siamashka"],
 	"license": "BSL-1.0",
+	"targetType": "sourceLibrary",
 	"sourceFiles": ["speedy/int128.d",
 			"speedy/int128_core.d",
 			"speedy/int128_core_ldc.d"],
