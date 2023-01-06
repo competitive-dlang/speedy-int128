@@ -40,12 +40,15 @@ file is limited (65535 bytes).
 ## Performance
 
 Benchmarks are done using the benchmark.d / benchmark.c test program and they are a part of CI. The following
-table represents results from https://github.com/ssvb/speedy-int128/actions/runs/3857958532/jobs/6575937876
-https://github.com/ssvb/speedy-int128/actions/runs/3857958527/jobs/6575937863
+table represents results from
+
+https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703 (Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz)
+https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848 (Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz)
+https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846 (ARM)
 
 | platform                                         | compiler       | 64-bit     | 32-bit     | notes                        |
 |:------------------------------------------------:|:--------------:|:----------:|:----------:|:----------------------------:|
-| Linux x86-64 (Github Actions CI)                 | DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
+| Linux x86-64 (GitHub Actions CI)                 | DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
 |                                                  | GDC 12.1.0     | 2959 ms    | -          | std.int128                   |
 |                                                  | LDC 1.30.0     | 1927 ms    | 5759 ms    | std.int128                   |
 |                                                  | Clang 14.0.0   | 468 ms     | -          | -O3                          |
