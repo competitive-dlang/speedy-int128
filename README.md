@@ -48,7 +48,7 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846 (A
 
 | platform                                         | compiler       | 64-bit     | 32-bit     | notes                        |
 |:------------------------------------------------:|:--------------:|:----------:|:----------:|:----------------------------:|
-| Linux x86-64 (GitHub Actions CI)                 | DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
+| GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz)                 | DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
 |                                                  | GDC 12.1.0     | 2959 ms    | -          | std.int128                   |
 |                                                  | LDC 1.30.0     | 1927 ms    | 5759 ms    | std.int128                   |
 |                                                  | Clang 14.0.0   | 468 ms     | -          | -O3                          |
