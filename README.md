@@ -6,10 +6,10 @@ for the LDC compiler to make it faster at handling 128-bit integers. This makes 
 fast as Clang, because Clang was actually used as a "donor" of this LLVM IR code via a
 [simple script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
 
-This package is also a way to backport 128-bit arithmetics support from std.int128 to
+This package is also a way to backport 128-bit arithmetics support from `std.int128` to
 the ancient versions of DMD, GDC and LDC.
 
-Additionally, a oneliner variant is provided for
+And finally, a oneliner variant is provided for
 [use on programming competition websites](https://github.com/ssvb/speedy-int128/tree/readme#use-on-programming-competition-websites).
 
 ## Example
@@ -108,4 +108,4 @@ The [onelinerizer.rb](https://github.com/ssvb/speedy-int128/blob/readme/oneliner
 script can be used to compress the original 42K of D code into a single 16K line
 by removing comments, extra whitespaces and unittests. The result is
 [speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d),
-which can be pasted into the source code instead of the "import speedy.int128;" line.
+which can be pasted into the source code instead of the `"import speedy.int128;"` line.
