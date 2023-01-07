@@ -1,16 +1,16 @@
 # speedy-int128 [![Dub version](https://img.shields.io/dub/v/speedy-int128.svg)](https://code.dlang.org/packages/speedy-int128) [![Dub downloads](https://img.shields.io/dub/dt/speedy-int128.svg)](https://code.dlang.org/packages/speedy-int128) [![tests](https://github.com/ssvb/speedy-int128/actions/workflows/tests.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/tests.yml) [![x86](https://github.com/ssvb/speedy-int128/actions/workflows/x86.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/x86.yml) [![arm](https://github.com/ssvb/speedy-int128/actions/workflows/arm.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/arm.yml)
 
 It's technically a fork of [std.int128](https://dlang.org/phobos/std_int128.html) with added
-[inline LLVM IR](https://github.com/ssvb/speedy-int128/blob/readme/speedy/int128_core_ldc.d)
+[inline LLVM IR](https://github.com/ssvb/speedy-int128/blob/main/speedy/int128_core_ldc.d)
 for the LDC compiler to make it faster at handling 128-bit integers. This makes it as
 fast as Clang, because Clang was actually used as a "donor" of this LLVM IR code via a
-[simple script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
+[simple script](https://github.com/ssvb/speedy-int128/blob/main/speedy/gen_int128_core_ldc.rb).
 
 This package also enables access to 128-bit arithmetics for the ancient versions of DMD, GDC
 and LDC, which don't have the standard `std.int128` module yet.
 
 And finally, a oneliner variant is provided for
-[use on programming competition websites](https://github.com/ssvb/speedy-int128/tree/readme#use-on-programming-competition-websites).
+[use on programming competition websites](https://github.com/ssvb/speedy-int128/tree/main#use-on-programming-competition-websites).
 
 ## Example
 
@@ -105,8 +105,8 @@ libraries. Needless to say that DUB packages can't be used there in a normal way
 Another challenge is that each solution has to be submitted as a single source file
 with a certain size limit (only 65535 bytes on Codeforces!).
 
-The [onelinerizer.rb](https://github.com/ssvb/speedy-int128/blob/readme/onelinerizer.rb)
+The [onelinerizer.rb](https://github.com/ssvb/speedy-int128/blob/main/onelinerizer.rb)
 script can be used to compress the original 42K of D code into a single 16K line
 by removing comments, extra whitespaces and unittests. The result is
-[speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d),
+[speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/main/speedy_int128_oneliner.d),
 which can be copy-pasted into the source code replacing the `"import speedy.int128;"` line.
