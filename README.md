@@ -34,22 +34,23 @@ $ dub build --build release --single --compiler=ldc2 example.d
 ## Performance
 
 Benchmarks are done using the [benchmark.d](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.d) /
-[benchmark.c](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.c) test programs and they
-are a part of CI. Below are some results:
+[benchmark.c](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.c) test programs (test random
+64-bit numbers whether they are [prime](https://en.wikipedia.org/wiki/Prime_number) or not) as part of CI.
+Some examples:
 
 <details>
   <summary>GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz</summary>
 
 https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703
 
-| compiler       | 64-bit     | 32-bit     | notes                        |
-|:--------------:|:----------:|:----------:|:----------------------------:|
-| DMD 2.100.2    | 2999 ms    | 10755 ms   | std.int128                   |
-| GDC 12.1.0     | 2943 ms    | -          | std.int128                   |
-| LDC 1.30.0     | 1930 ms    | 5765 ms    | std.int128                   |
-| Clang 14.0.0   | 468 ms     | -          | -O3                          |
-| LDC 1.30.0     | 402 ms     | 3582 ms    | speedy.int128 v0.1.0         |
-| GCC 11.3.0     | 393 ms     | -          | -O3                          |
+| language | compiler       | 64-bit     | 32-bit     | notes                        |
+|:--------:|:--------------:|:----------:|:----------:|:----------------------------:|
+| D        | DMD 2.100.2    | 2999 ms    | 10755 ms   | std.int128                   |
+| D        | GDC 12.1.0     | 2943 ms    | -          | std.int128                   |
+| D        | LDC 1.30.0     | 1930 ms    | 5765 ms    | std.int128                   |
+| C/C++    | Clang 14.0.0   | 468 ms     | -          | -O3                          |
+| D        | LDC 1.30.0     | 402 ms     | 3582 ms    | speedy.int128 v0.1.0         |
+| C/C++    | GCC 11.3.0     | 393 ms     | -          | -O3                          |
 
 </details>
 
@@ -58,14 +59,14 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703
 
 https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848
 
-| compiler       | 64-bit     | 32-bit     | notes                        |
-|:--------------:|:----------:|:----------:|:----------------------------:|
-| DMD 2.100.2    | 3854 ms    | 11125 ms   | std.int128                   |
-| GDC 12.1.0     | 3753 ms    | -          | std.int128                   |
-| LDC 1.30.0     | 2735 ms    | 6068 ms    | std.int128                   |
-| Clang 14.0.0   | 1885 ms    | -          | -O3                          |
-| LDC 1.30.0     | 1801 ms    | 4011 ms    | speedy.int128 v0.1.0         |
-| GCC 11.3.0     | 1792 ms    | -          | -O3                          |
+| language | compiler       | 64-bit     | 32-bit     | notes                        |
+|:--------:|:--------------:|:----------:|:----------:|:----------------------------:|
+| D        | DMD 2.100.2    | 3854 ms    | 11125 ms   | std.int128                   |
+| D        | GDC 12.1.0     | 3753 ms    | -          | std.int128                   |
+| D        | LDC 1.30.0     | 2735 ms    | 6068 ms    | std.int128                   |
+| C/C++    | Clang 14.0.0   | 1885 ms    | -          | -O3                          |
+| D        | LDC 1.30.0     | 1801 ms    | 4011 ms    | speedy.int128 v0.1.0         |
+| C/C++    | GCC 11.3.0     | 1792 ms    | -          | -O3                          |
 
 </details>
 
@@ -74,14 +75,14 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848
 
 https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
 
-| compiler       | 64-bit     | 32-bit     | notes                        |
-|:--------------:|:----------:|:----------:|:----------------------------:|
-| GDC 12.1.0     | 2867 ms    | -          | std.int128                   |
-| LDC 1.30.0     | 1657 ms    | -          | std.int128                   |
-| LDC 1.28.0     | 941 ms     | 12739 ms   | speedy.int128 v0.1.0         |
-| LDC 1.30.0     | 934 ms     | -          | speedy.int128 v0.1.0         |
-| Clang 14.0.0   | 922 ms     | -          | -O3                          |
-| GCC 11.2.0     | 898 ms     | -          | -O3                          |
+| language | compiler       | 64-bit     | 32-bit     | notes                        |
+|:--------:|:--------------:|:----------:|:----------:|:----------------------------:|
+| D        | GDC 12.1.0     | 2867 ms    | -          | std.int128                   |
+| D        | LDC 1.30.0     | 1657 ms    | -          | std.int128                   |
+| D        | LDC 1.28.0     | 941 ms     | 12739 ms   | speedy.int128 v0.1.0         |
+| D        | LDC 1.30.0     | 934 ms     | -          | speedy.int128 v0.1.0         |
+| C/C++    | Clang 14.0.0   | 922 ms     | -          | -O3                          |
+| C/C++    | GCC 11.2.0     | 898 ms     | -          | -O3                          |
 
 </details>
 
