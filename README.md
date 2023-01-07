@@ -1,13 +1,13 @@
 # speedy-int128 [![Dub version](https://img.shields.io/dub/v/speedy-int128.svg)](https://code.dlang.org/packages/speedy-int128) [![Dub downloads](https://img.shields.io/dub/dt/speedy-int128.svg)](https://code.dlang.org/packages/speedy-int128) [![tests](https://github.com/ssvb/speedy-int128/actions/workflows/tests.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/tests.yml) [![x86](https://github.com/ssvb/speedy-int128/actions/workflows/x86.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/x86.yml) [![arm](https://github.com/ssvb/speedy-int128/actions/workflows/arm.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/arm.yml)
 
-This is a fork of [std.int128](https://dlang.org/phobos/std_int128.html) with
+This is a fork of [std.int128](https://dlang.org/phobos/std_int128.html) with added
 [inline LLVM IR](https://github.com/ssvb/speedy-int128/blob/readme/speedy/int128_core_ldc.d)
 for the LDC compiler to make it faster at handling 128-bit integers. This makes it as
-fast as Clang, because Clang was actually a "donor" of this LLVM IR code via a
-[script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
+fast as Clang, because Clang was actually used as a "donor" of this LLVM IR code via a
+[simple script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
 
-This package also enables access to 128-bit arithmetics support for the ancient versions
-of DMD, GDC and LDC.
+This package is also a way to backport 128-bit arithmetics support to the ancient versions
+of DMD, GDC and LDC which don't have it in their standard library yet.
 
 Additionally, a [oneliner variant](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d)
 is provided for [use in programming competitions](https://github.com/ssvb/speedy-int128/tree/readme#use-in-programming-competitions).
