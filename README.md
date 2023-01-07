@@ -109,8 +109,9 @@ Another challenge is that each solution has to be submitted as a single source f
 with a certain size limit (only 65535 bytes on Codeforces!).
 
 The [onelinerizer.rb](https://github.com/ssvb/speedy-int128/blob/readme/onelinerizer.rb)
-script is used to compress the 42K of D code into a single 16K line by removing comments,
-extra whitespaces and unittests.
+script can be used to compress the original 42K of D code into a single 16K line
+by removing comments, extra whitespaces and unittests. The result is
+[speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d).
 
 ### Others
 
