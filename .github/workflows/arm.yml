@@ -43,6 +43,7 @@ jobs:
           gdc-12 --version
           gcc --version
           clang --version
+          lscpu
 
       - name: Run 64-bit tests
         run: |
