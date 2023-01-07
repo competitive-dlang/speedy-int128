@@ -42,55 +42,55 @@ file is limited (65535 bytes).
 Benchmarks are done using the benchmark.d / benchmark.c test program and they are a part of CI. The following
 table represents results from
 
-https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703 (Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz)
-https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848 (Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz)
-https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846 (ARM)
-
 <details>
   <summary>GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz</summary>
 
+https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703
+
 | compiler       | 64-bit     | 32-bit     | notes                        |
 |:--------------:|:----------:|:----------:|:----------------------------:|
-| DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
-| GDC 12.1.0     | 2959 ms    | -          | std.int128                   |
-| LDC 1.30.0     | 1927 ms    | 5759 ms    | std.int128                   |
+| DMD 2.100.2    | 2999 ms    | 10755 ms   | std.int128                   |
+| GDC 12.1.0     | 2943 ms    | -          | std.int128                   |
+| LDC 1.30.0     | 1930 ms    | 5765 ms    | std.int128                   |
 | Clang 14.0.0   | 468 ms     | -          | -O3                          |
-| LDC 1.30.0     | 402 ms     | 3583 ms    | speedy.int128                |
-| GCC 11.3.0     | 392 ms     | -          | -O3                          |
+| LDC 1.30.0     | 402 ms     | 3582 ms    | speedy.int128                |
+| GCC 11.3.0     | 393 ms     | -          | -O3                          |
+
+</details>
+
+<details>
+  <summary>GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz</summary>
+
+https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848
+
+| compiler       | 64-bit     | 32-bit     | notes                        |
+|:--------------:|:----------:|:----------:|:----------------------------:|
+| DMD 2.100.2    | 3854 ms    | 11125 ms   | std.int128                   |
+| GDC 12.1.0     | 3753 ms    | -          | std.int128                   |
+| LDC 1.30.0     | 2735 ms    | 6068 ms    | std.int128                   |
+| Clang 14.0.0   | 1885 ms    | -          | -O3                          |
+| LDC 1.30.0     | 1801 ms    | 4011 ms    | speedy.int128                |
+| GCC 11.3.0     | 1792 ms    | -          | -O3                          |
 
 </details>
 
 <details>
   <summary>BuildJet CI, Linux aarch64 </summary>
 
+https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
+
 | compiler       | 64-bit     | 32-bit     | notes                        |
 |:--------------:|:----------:|:----------:|:----------------------------:|
-| GDC 12.1.0     | 2874 ms    | -          | std.int128                   |
-| LDC 1.30.0     | 1653 ms    | -          | std.int128                   |
-| LDC 1.28.0     | 939 ms     | 12771 ms   | speedy.int128                |
+| GDC 12.1.0     | 2867 ms    | -          | std.int128                   |
+| LDC 1.30.0     | 1657 ms    | -          | std.int128                   |
+| LDC 1.28.0     | 941 ms     | 12739 ms   | speedy.int128                |
 | LDC 1.30.0     | 934 ms     | -          | speedy.int128                |
-| Clang          | 923 ms     | -          | -O3                          |
+| Clang          | 922 ms     | -          | -O3                          |
 | GCC            | 898 ms     | -          | -O3                          |
 
 </details>
 
 ### Others
-
-| platform                                         | compiler       | 64-bit     | 32-bit     | notes                        |
-|:------------------------------------------------:|:--------------:|:----------:|:----------:|:----------------------------:|
-| GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz)                 | DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
-|                                                  | GDC 12.1.0     | 2959 ms    | -          | std.int128                   |
-|                                                  | LDC 1.30.0     | 1927 ms    | 5759 ms    | std.int128                   |
-|                                                  | Clang 14.0.0   | 468 ms     | -          | -O3                          |
-|                                                  | LDC 1.30.0     | 402 ms     | 3583 ms    | speedy.int128                |
-|                                                  | GCC 11.3.0     | 392 ms     | -          | -O3                          |
-| **platform**                                     | **compiler**   | **64-bit** | **32-bit** | **notes**                    |
-| Linux aarch64 (BuildJet CI)                      | GDC 12.1.0     | 2874 ms    | -          | std.int128                   |
-|                                                  | LDC 1.30.0     | 1653 ms    | -          | std.int128                   |
-|                                                  | LDC 1.28.0     | 939 ms     | 12771 ms   | speedy.int128                |
-|                                                  | LDC 1.30.0     | 934 ms     | -          | speedy.int128                |
-|                                                  | Clang          | 923 ms     | -          | -O3                          |
-|                                                  | GCC            | 898 ms     | -          | -O3                          |
 
 Additionally a oneliner variant can be used to do a benchmark on programing competition websites:
 
