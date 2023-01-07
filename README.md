@@ -44,8 +44,7 @@ $ dub build --build release --single --compiler=ldc2 example.d
 ## Performance
 
 Benchmarks are done using the [benchmark.d](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.d) /
-[benchmark.c](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.c) test programs (test random
-64-bit numbers whether they are [prime](https://en.wikipedia.org/wiki/Prime_number) or not) as part of CI.
+[benchmark.c](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.c) test programs as part of CI.
 Some examples:
 
 <details>
@@ -96,8 +95,6 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
 
 </details>
 
-Basically, LDC has performance parity with Clang and that's how it should be.
-
 ## Use on programming competition websites
 
 Programming competition websites, such as [Codeforces](https://codeforces.com/) and
@@ -113,21 +110,3 @@ script can be used to compress the original 42K of D code into a single 16K line
 by removing comments, extra whitespaces and unittests. The result is
 [speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d),
 which can be pasted into the source code instead of the "import speedy.int128;" line.
-This way the [benchmark.d](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.d)
-example can be submitted to https://atcoder.jp/contests/practice/custom_test or
-https://codeforces.com/problemset/customtest and it works fine.
-
-### Others
-
-Additionally the oneliner variant can be used to do a benchmark on programing competition websites:
-
-| platform                                         | compiler       | 64-bit     | 32-bit     | notes                        |
-|:------------------------------------------------:|:--------------:|:----------:|:----------:|:----------------------------:|
-| https://atcoder.jp/contests/practice/custom_test | DMD 2.091.0    | 2938 ms    | -          | speedy.int128 oneliner       |
-|                                                  | GDC 9.2.1      | 1990 ms    | -          | speedy.int128 oneliner       |
-|                                                  | Clang 10       | 1453 ms    | -          |                              |
-|                                                  | GCC 9.2.1      | 1440 ms    | -          |                              |
-|                                                  | LDC 1.20.1     | 1437 ms    | -          | speedy.int128 oneliner       |
-| **platform**                                     | **compiler**   | **64-bit** | **32-bit** | **notes**                    |
-| https://codeforces.com/problemset/customtest     | DMD 2.091.0    | -          | 9032 ms    | speedy.int128 oneliner       |
-|                                                  | GCC 11.2.0     | 1560 ms    | -          |                              |
