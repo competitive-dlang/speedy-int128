@@ -10,7 +10,7 @@ This package is also a way to backport 128-bit arithmetics support to the ancien
 of DMD, GDC and LDC which don't have it in their standard library yet.
 
 Additionally, a [oneliner variant](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d)
-is provided for [use in programming competitions](https://github.com/ssvb/speedy-int128/tree/readme#use-in-programming-competitions).
+is provided for [use on programming competition websites](https://github.com/ssvb/speedy-int128/tree/readme#use-on-programming-competition-websites).
 
 ## Example
 
@@ -98,11 +98,19 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
 
 Basically, LDC has performance parity with Clang and that's how it should be.
 
-## Use in programming competitions
+## Use on programming competition websites
 
-Unorthodox packaging requirements. Third party libraries in DUB packages are unavailable.
-Each solution is submitted as just a single source file and the size of this source
-file is limited (65535 bytes).
+Programming competition websites, such as [Codeforces](https://codeforces.com/) and
+[AtCoder](https://atcoder.jp/) allow using D language for submitting solutions. But
+their compilers are typically very old and also installed without any third-party
+libraries. Needless to say that DUB packages can't be used there in a normal way.
+
+Another challenge is that each solution has to be submitted as a single source file
+with a certain size limit (only 65535 bytes on Codeforces!).
+
+The [onelinerizer.rb](https://github.com/ssvb/speedy-int128/blob/readme/onelinerizer.rb)
+script is used to compress the 42K of D code into a single 16K line by removing comments,
+extra whitespaces and unittests.
 
 ### Others
 
