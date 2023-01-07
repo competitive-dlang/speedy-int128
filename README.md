@@ -98,7 +98,7 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
 ## Use on programming competition websites
 
 Programming competition websites, such as [Codeforces](https://codeforces.com/) and
-[AtCoder](https://atcoder.jp/) allow using D language for submitting solutions. But
+[AtCoder](https://atcoder.jp/), allow using D language for submitting solutions. But
 their compilers are typically very old and also installed without any third-party
 libraries. Needless to say that DUB packages can't be used there in a normal way.
 Another challenge is that each solution has to be submitted as a single source file
@@ -108,4 +108,4 @@ The [onelinerizer.rb](https://github.com/ssvb/speedy-int128/blob/readme/oneliner
 script can be used to compress the original 42K of D code into a single 16K line
 by removing comments, extra whitespaces and unittests. The result is
 [speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d),
-which can be pasted into the source code instead of the `"import speedy.int128;"` line.
+which can be copy-pasted into the source code replacing the `"import speedy.int128;"` line.
