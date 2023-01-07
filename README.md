@@ -111,7 +111,11 @@ with a certain size limit (only 65535 bytes on Codeforces!).
 The [onelinerizer.rb](https://github.com/ssvb/speedy-int128/blob/readme/onelinerizer.rb)
 script can be used to compress the original 42K of D code into a single 16K line
 by removing comments, extra whitespaces and unittests. The result is
-[speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d).
+[speedy_int128_oneliner.d](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d),
+which can be pasted into the source code instead of the "import speedy.int128;" line.
+This way the [benchmark.d](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.d)
+example can be submitted to https://atcoder.jp/contests/practice/custom_test or
+https://codeforces.com/problemset/customtest and it works fine.
 
 ### Others
 
