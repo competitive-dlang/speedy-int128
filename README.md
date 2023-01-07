@@ -46,6 +46,31 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703 (I
 https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848 (Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz)
 https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846 (ARM)
 
+### GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+
+| compiler       | 64-bit     | 32-bit     | notes                        |
+|:--------------:|:----------:|:----------:|:----------------------------:|
+| DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
+| GDC 12.1.0     | 2959 ms    | -          | std.int128                   |
+| LDC 1.30.0     | 1927 ms    | 5759 ms    | std.int128                   |
+| Clang 14.0.0   | 468 ms     | -          | -O3                          |
+| LDC 1.30.0     | 402 ms     | 3583 ms    | speedy.int128                |
+| GCC 11.3.0     | 392 ms     | -          | -O3                          |
+
+### BuildJet CI, Linux aarch64 
+
+| compiler       | 64-bit     | 32-bit     | notes                        |
+|:--------------:|:----------:|:----------:|:----------------------------:|
+| GDC 12.1.0     | 2874 ms    | -          | std.int128                   |
+| LDC 1.30.0     | 1653 ms    | -          | std.int128                   |
+| LDC 1.28.0     | 939 ms     | 12771 ms   | speedy.int128                |
+| LDC 1.30.0     | 934 ms     | -          | speedy.int128                |
+| Clang          | 923 ms     | -          | -O3                          |
+| GCC            | 898 ms     | -          | -O3                          |
+
+
+### Others
+
 | platform                                         | compiler       | 64-bit     | 32-bit     | notes                        |
 |:------------------------------------------------:|:--------------:|:----------:|:----------:|:----------------------------:|
 | GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz)                 | DMD 2.100.2    | 2968 ms    | 10760 ms   | std.int128                   |
