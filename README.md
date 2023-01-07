@@ -6,11 +6,11 @@ for the LDC compiler to make it faster at handling 128-bit integers. This makes 
 fast as Clang, because Clang was actually used as a "donor" of this LLVM IR code via a
 [simple script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
 
-This package is also a way to backport 128-bit arithmetics support to the ancient versions
-of DMD, GDC and LDC which don't have it in their standard library yet.
+This package is also a way to backport 128-bit arithmetics support from std.int128 to
+the ancient versions of DMD, GDC and LDC.
 
-Additionally, a [oneliner variant](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d)
-is provided for [use on programming competition websites](https://github.com/ssvb/speedy-int128/tree/readme#use-on-programming-competition-websites).
+Additionally, a oneliner variant is provided for
+[use on programming competition websites](https://github.com/ssvb/speedy-int128/tree/readme#use-on-programming-competition-websites).
 
 ## Example
 
@@ -101,7 +101,6 @@ Programming competition websites, such as [Codeforces](https://codeforces.com/) 
 [AtCoder](https://atcoder.jp/) allow using D language for submitting solutions. But
 their compilers are typically very old and also installed without any third-party
 libraries. Needless to say that DUB packages can't be used there in a normal way.
-
 Another challenge is that each solution has to be submitted as a single source file
 with a certain size limit (only 65535 bytes on Codeforces!).
 
