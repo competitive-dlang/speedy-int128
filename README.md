@@ -2,9 +2,15 @@
 
 This is a fork of [std.int128](https://dlang.org/phobos/std_int128.html) with
 [inline LLVM IR](https://github.com/ssvb/speedy-int128/blob/readme/speedy/int128_core_ldc.d)
-for the LDC compiler. It is as fast as Clang at handling 128-bit integers. Because
-Clang was actually a "donor" of this LLVM IR code via a
+for the LDC compiler to make it faster at handling 128-bit integers. This makes it as
+fast as Clang, because Clang was actually a "donor" of this LLVM IR code via a
 [script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
+
+This package also enables access to 128-bit arithmetics support for the ancient versions
+of DMD, GDC and LDC.
+
+Additionally, a [oneliner variant](https://raw.githubusercontent.com/ssvb/speedy-int128/readme/speedy_int128_oneliner.d)
+is provided for [use in programming competitions](https://github.com/ssvb/speedy-int128/tree/readme#use-in-programming-competitions).
 
 ## Example
 
