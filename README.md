@@ -85,8 +85,8 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
 | LDC 1.30.0     | 1657 ms    | -          | std.int128                   |
 | LDC 1.28.0     | 941 ms     | 12739 ms   | speedy.int128                |
 | LDC 1.30.0     | 934 ms     | -          | speedy.int128                |
-| Clang          | 922 ms     | -          | -O3                          |
-| GCC            | 898 ms     | -          | -O3                          |
+| Clang 14.0.0   | 922 ms     | -          | -O3                          |
+| GCC 11.2.0     | 898 ms     | -          | -O3                          |
 
 </details>
 
