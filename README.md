@@ -46,7 +46,8 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703 (I
 https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848 (Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz)
 https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846 (ARM)
 
-### GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+<details>
+  <summary>GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz</summary>
 
 | compiler       | 64-bit     | 32-bit     | notes                        |
 |:--------------:|:----------:|:----------:|:----------------------------:|
@@ -57,7 +58,10 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846 (A
 | LDC 1.30.0     | 402 ms     | 3583 ms    | speedy.int128                |
 | GCC 11.3.0     | 392 ms     | -          | -O3                          |
 
-### BuildJet CI, Linux aarch64 
+</details>
+
+<details>
+  <summary>BuildJet CI, Linux aarch64 </summary>
 
 | compiler       | 64-bit     | 32-bit     | notes                        |
 |:--------------:|:----------:|:----------:|:----------------------------:|
@@ -68,6 +72,7 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846 (A
 | Clang          | 923 ms     | -          | -O3                          |
 | GCC            | 898 ms     | -          | -O3                          |
 
+</details>
 
 ### Others
 
