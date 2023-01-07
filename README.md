@@ -6,8 +6,8 @@ for the LDC compiler to make it faster at handling 128-bit integers. This makes 
 fast as Clang, because Clang was actually used as a "donor" of this LLVM IR code via a
 [simple script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
 
-This package is also a way to backport 128-bit arithmetics support from `std.int128` to
-the ancient versions of DMD, GDC and LDC.
+This package also enables access to 128-bit arithmetics for the ancient versions of DMD, GDC
+and LDC, which don't have the standard `std.int128` yet.
 
 And finally, a oneliner variant is provided for
 [use on programming competition websites](https://github.com/ssvb/speedy-int128/tree/readme#use-on-programming-competition-websites).
