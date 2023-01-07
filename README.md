@@ -1,6 +1,10 @@
 # speedy-int128 [![Dub version](https://img.shields.io/dub/v/speedy-int128.svg)](https://code.dlang.org/packages/speedy-int128) [![Dub downloads](https://img.shields.io/dub/dt/speedy-int128.svg)](https://code.dlang.org/packages/speedy-int128) [![tests](https://github.com/ssvb/speedy-int128/actions/workflows/tests.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/tests.yml) [![x86](https://github.com/ssvb/speedy-int128/actions/workflows/x86.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/x86.yml) [![arm](https://github.com/ssvb/speedy-int128/actions/workflows/arm.yml/badge.svg)](https://github.com/ssvb/speedy-int128/actions/workflows/arm.yml)
 
-An experiment to speed up the 128-bit integer type for the LDC D compiler.
+This is a fork of [std.int128](https://dlang.org/phobos/std_int128.html) with
+[inline LLVM IR](https://github.com/ssvb/speedy-int128/blob/readme/speedy/int128_core_ldc.d)
+for the LDC compiler. It is as fast as Clang at handling 128-bit integers. Because
+Clang was actually a "donor" of this LLVM IR code via a
+[script](https://github.com/ssvb/speedy-int128/blob/readme/speedy/gen_int128_core_ldc.rb).
 
 ## Example
 
