@@ -45,7 +45,7 @@ $ dub build --build release --single --compiler=ldc2 example.d
 
 Benchmarks are done using the [benchmark.d](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.d) /
 [benchmark.c](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.c) test programs as part of CI.
-The optimization options are whatever the DUB tool considers appropriate for doing release builds.
+The optimization options are whatever the DUB tool considers default for producing release builds.
 Some examples:
 
 <details>
