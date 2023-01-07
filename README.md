@@ -31,16 +31,11 @@ Or compile an optimized binary using the [LDC compiler](https://github.com/ldc-d
 $ dub build --build release --single --compiler=ldc2 example.d
 ```
 
-## Use in programming competitions
-
-Unorthodox packaging requirements. Third party libraries in DUB packages are unavailable.
-Each solution is submitted as just a single source file and the size of this source
-file is limited (65535 bytes).
-
 ## Performance
 
-Benchmarks are done using the benchmark.d / benchmark.c test program and they are a part of CI. The following
-table represents results from
+Benchmarks are done using the [benchmark.d](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.d) /
+[benchmark.c](https://raw.githubusercontent.com/ssvb/speedy-int128/main/benchmark.c) test programs and they
+are a part of CI. Below are some results:
 
 <details>
   <summary>GitHub Actions CI, Linux x86_64, Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz</summary>
@@ -53,7 +48,7 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859195372/jobs/6578500703
 | GDC 12.1.0     | 2943 ms    | -          | std.int128                   |
 | LDC 1.30.0     | 1930 ms    | 5765 ms    | std.int128                   |
 | Clang 14.0.0   | 468 ms     | -          | -O3                          |
-| LDC 1.30.0     | 402 ms     | 3582 ms    | speedy.int128                |
+| LDC 1.30.0     | 402 ms     | 3582 ms    | speedy.int128 v0.1.0         |
 | GCC 11.3.0     | 393 ms     | -          | -O3                          |
 
 </details>
@@ -69,13 +64,13 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220724/jobs/6578545848
 | GDC 12.1.0     | 3753 ms    | -          | std.int128                   |
 | LDC 1.30.0     | 2735 ms    | 6068 ms    | std.int128                   |
 | Clang 14.0.0   | 1885 ms    | -          | -O3                          |
-| LDC 1.30.0     | 1801 ms    | 4011 ms    | speedy.int128                |
+| LDC 1.30.0     | 1801 ms    | 4011 ms    | speedy.int128 v0.1.0         |
 | GCC 11.3.0     | 1792 ms    | -          | -O3                          |
 
 </details>
 
 <details>
-  <summary>BuildJet CI, Linux aarch64 </summary>
+  <summary>BuildJet CI, Linux aarch64, ARM Neoverse-N1</summary>
 
 https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
 
@@ -83,16 +78,24 @@ https://github.com/ssvb/speedy-int128/actions/runs/3859220721/jobs/6578545846
 |:--------------:|:----------:|:----------:|:----------------------------:|
 | GDC 12.1.0     | 2867 ms    | -          | std.int128                   |
 | LDC 1.30.0     | 1657 ms    | -          | std.int128                   |
-| LDC 1.28.0     | 941 ms     | 12739 ms   | speedy.int128                |
-| LDC 1.30.0     | 934 ms     | -          | speedy.int128                |
+| LDC 1.28.0     | 941 ms     | 12739 ms   | speedy.int128 v0.1.0         |
+| LDC 1.30.0     | 934 ms     | -          | speedy.int128 v0.1.0         |
 | Clang 14.0.0   | 922 ms     | -          | -O3                          |
 | GCC 11.2.0     | 898 ms     | -          | -O3                          |
 
 </details>
 
+Basically, LDC has performance parity with Clang and that's how it should be.
+
+## Use in programming competitions
+
+Unorthodox packaging requirements. Third party libraries in DUB packages are unavailable.
+Each solution is submitted as just a single source file and the size of this source
+file is limited (65535 bytes).
+
 ### Others
 
-Additionally a oneliner variant can be used to do a benchmark on programing competition websites:
+Additionally the oneliner variant can be used to do a benchmark on programing competition websites:
 
 | platform                                         | compiler       | 64-bit     | 32-bit     | notes                        |
 |:------------------------------------------------:|:--------------:|:----------:|:----------:|:----------------------------:|
