@@ -31,7 +31,7 @@ void main() {
 }
 ```
 
-Install the [DUB package manager](https://github.com/dlang/dub) and run the example in a [script-like fashion](https://dub.pm/advanced_usage):
+Install the [DUB package manager](https://github.com/dlang/dub) and run the example in a [script-like fashion](https://dub.pm/dub-guide/single):
 ```
 $ dub example.d
 ```
