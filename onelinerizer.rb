@@ -145,7 +145,7 @@ def strip_unittests(data)
   # brackets may cause troubles here!
 
   # Handle "unittest { ... }". This is relatively simple.
-  if data =~ /^(.*?)[^\;\}]*unittest\{(.*)$/m
+  if data =~ /^(.*?)[^\;\}\{]*unittest\{(.*)$/m
     part1 = $1
     part2 = delete_prefix_until_the_closing_curly_bracket($2)
     return strip_unittests(part1 + part2)
